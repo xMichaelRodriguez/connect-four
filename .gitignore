@@ -1,5 +1,5 @@
 node_modules
-server/src/build
+server/build
 
 # dependencies
 front-end/node_modules
