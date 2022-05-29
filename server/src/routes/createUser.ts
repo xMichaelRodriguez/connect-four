@@ -28,7 +28,7 @@ export default route;
 function addUser({ username }: { username: string }) {
   const userToSave = {
     userName: username,
-    id: `${Math.floor(Math.random() * 100)}`,
+    rank: `${Math.floor(Math.random() * 100)}`,
   };
   users.push(userToSave);
 

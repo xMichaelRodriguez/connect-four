@@ -5,12 +5,10 @@ import { socket } from '../../../lib/sockets';
 export const TotalUsers = () => {
   const [totalUser, setTotalUser] = useState(0);
   useEffect(() => {
-    socket.emit('message2');
-
-    socket.on('users', (data) => {
-      console.log(data);
+    socket.on('userCount', (data: number) => {
+      setTotalUser(data);
     });
-  }, []);
+  }, [totalUser]);
 
   return <Text fontSize={'lg'}>Total Users: {totalUser}</Text>;
 };

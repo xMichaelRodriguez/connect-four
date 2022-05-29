@@ -10,7 +10,7 @@ export interface IFormInput {
   username: string;
 }
 interface IResponse {
-  description: string;
+  description: any;
   name: string;
 }
 export const AuthPage = () => {
@@ -18,7 +18,7 @@ export const AuthPage = () => {
   const history = useHistory();
 
   const { register, handleSubmit, formState } = useForm<IFormInput>();
-  const onSubmit: SubmitHandler<IFormInput> = ({ username }) => {
+  const onSubmit: SubmitHandler<IFormInput> = async ({ username }) => {
     const options = {
       method: 'POST',
       headers: {
@@ -26,16 +26,14 @@ export const AuthPage = () => {
       },
       body: JSON.stringify({ username }),
     };
-    fetch(`${baseUrl}user/create-user`, options)
-      .then((res) => res.json())
-      .then((resp) => {
-        if (resp.name === 'userAlreadyExists') return alert(resp.description);
-        
-        socket.emit('createdUser',{message:"hoal"});
-        handleSetAuth(resp.description);
+    const body = await fetch(`${baseUrl}user/create-user`, options);
+    const data: IResponse = await body.json();
+    if (data.name === 'userAlreadyExists') return alert(data.description);
 
-        history.push('/');
-      });
+    socket.emit('userCreated');
+    handleSetAuth(data.description);
+
+    history.push('/');
   };
 
   return (

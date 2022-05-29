@@ -4,8 +4,8 @@ import http from 'http';
 import dotenv from 'dotenv';
 import cors from 'cors';
 
-import * as queue from './routes/colaRoute';
-import * as socketUsers from './routes/usersRoute';
+import queueEvents from './routes/colaRoute';
+import userEvents from './routes/usersRoute';
 import userRoute from './routes/createUser';
 import { User } from './interfaces';
 
@@ -33,9 +33,9 @@ app.use('/api/user', userRoute);
 
 //socket.io
 io.on('connection', (socket: Socket) => {
-  // colaRoute
-  queue.listen(io, socket);
+  // socket users
+  userEvents(io, socket);
 
-  // users
-  socketUsers.listen(io, socket);
+  // colaRoute
+  queueEvents(io, socket);
 });
