@@ -33,7 +33,7 @@ export const AuthPage = () => {
     socket.emit('userCreated');
     handleSetAuth(data.description);
 
-    history.push('/');
+    history.push('/soloq');
   };
 
   return (

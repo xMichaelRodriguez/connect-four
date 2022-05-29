@@ -1,15 +1,18 @@
 import { AuthPage } from '../features/Auth/pages/AuthPage';
 import { HomeQueue } from '../features/home/pages/HomeQueue';
+import { IRoutes } from '../interfaces';
 
-export const routes = [
+export const routes: IRoutes[] = [
   {
-    name: 'Auth',
-    path: '/login',
     component: AuthPage,
+    exact: true,
+    name: 'Auth',
+    path: '/',
   },
   {
-    name: 'home queue',
-    path: '/',
     component: HomeQueue,
+    exact: false,
+    name: 'home',
+    path: '/soloq',
   },
 ];

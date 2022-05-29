@@ -1,8 +1,9 @@
 import { createContext } from 'react';
 
 export type User = {
-  id: string;
-  name: string;
+  id?: string;
+  userName: string;
+  rank: number;
   room?: string;
 };
 export interface IAuthContextProps {

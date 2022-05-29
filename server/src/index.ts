@@ -10,7 +10,6 @@ import userRoute from './routes/createUser';
 import { User } from './interfaces';
 
 // config
-
 export let users: User[] = [];
 export const app = express();
 app.use(cors());

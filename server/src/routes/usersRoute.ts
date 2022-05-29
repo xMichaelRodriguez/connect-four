@@ -5,6 +5,7 @@ export default (io: Server, socket: Socket) => {
   socket.on('userCreated', () => {
     setTimeout(() => {
       io.emit('userCount', users.length);
-    }, 100);
+      
+    }, 200);
   });
 };
