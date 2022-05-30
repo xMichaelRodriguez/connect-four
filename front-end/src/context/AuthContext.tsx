@@ -5,12 +5,11 @@ export type User = {
   userName: string;
   rank: number;
   room?: string;
+  hasPlayed: boolean;
 };
 export interface IAuthContextProps {
   auth: User;
   handleSetAuth: (user: User) => void;
 }
 
-export const AuthContext = createContext<IAuthContextProps>(
-  {} as IAuthContextProps
-);
+export const AuthContext = createContext<IAuthContextProps>({} as IAuthContextProps);

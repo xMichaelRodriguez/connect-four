@@ -1,7 +1,7 @@
 import React, { ReactNode, useState } from 'react';
 import { User, AuthContext } from './AuthContext';
 interface props {
-  children: ReactNode | ReactNode[];
+  children: ReactNode;
 }
 
 export const AuthProvider = ({ children }: props) => {

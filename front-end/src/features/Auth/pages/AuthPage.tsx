@@ -13,35 +13,24 @@ interface IResponse {
   description: any;
   name: string;
 }
+
 export const AuthPage = () => {
   const { handleSetAuth } = useContext(AuthContext);
   const history = useHistory();
 
   const { register, handleSubmit, formState } = useForm<IFormInput>();
   const onSubmit: SubmitHandler<IFormInput> = async ({ username }) => {
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username }),
-    };
-    const body = await fetch(`${baseUrl}user/create-user`, options);
-    const data: IResponse = await body.json();
-    if (data.name === 'userAlreadyExists') return alert(data.description);
-
-    socket.emit('userCreated');
-    handleSetAuth(data.description);
-
-    history.push('/soloq');
+    socket.emit('createUser', { username }, (data: IResponse) => {
+      if (data.name === 'userAlreadyExists') {
+        alert(data.description);
+      } else {
+        handleSetAuth(data.description);
+        history.replace('/soloq');
+      }
+    });
   };
 
   return (
-    <AuthView
-      onSubmit={onSubmit}
-      handleSubmit={handleSubmit}
-      formState={formState}
-      register={register}
-    />
+    <AuthView onSubmit={onSubmit} handleSubmit={handleSubmit} formState={formState} register={register} />
   );
 };
