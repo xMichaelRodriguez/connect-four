@@ -19,19 +19,18 @@ export default (io: Server, socket: Socket) => {
     const currentRoom = rooms[roomId];
     currentRoom[userIndex].hasPlayed = true;
 
-    if (!currentRoom.map((userInRoom) => userInRoom.hasPlayed).includes(false)) {
-      // createNewGame(currentRoom).then(res=>{
-      //   console.log('New Game Created');
-      //   io.in(roomId).emit('match-accepted', currentRoom);
-      //   delete rooms[roomId]
-      //   io.socketsLeave(roomId);
-      // }))
-      console.log({currentRoom})
+    const currentRoomHasNotAccepted = currentRoom.map((userInRoom) => userInRoom.hasPlayed).includes(false);
+
+    const currentRoomLength = currentRoom.length <= 2;
+
+    // checka si el usuario en la sala ha aceptado match y el total de usuarios en la sala es 2
+    if (!currentRoomHasNotAccepted && currentRoomLength) {
+      // console.log({ currentRoom });
       io.in(roomId).emit('match-accepted', currentRoom);
       delete rooms[roomId];
       io.socketsLeave(roomId);
     }
-
+    // si no busca entre los usuarios conectados si coincide el id que optenemos lo pasamos que si acepto
     users.forEach((user) => {
       if (user.id === id) {
         user.hasPlayed = true;

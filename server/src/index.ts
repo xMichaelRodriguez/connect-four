@@ -57,6 +57,7 @@ export function addUser(username: string, socket: Socket) {
     rank: Math.floor(Math.random() * 100),
     id: socket.id,
     hasPlayed: false,
+    room: '',
   };
   users.push(userToSave);
 
@@ -98,16 +99,29 @@ export function generateRoomId() {
   return Math.random().toString(36).substring(2, 15);
 }
 setInterval(() => {
-  checkIfMatchmaking(0, 100);
+  checkIfMatchmaking();
 }, updateInterval);
 
-export function checkIfMatchmaking(min: number, max: number) {
-  const machedUsers = queue.filter((singleUser) => singleUser.rank >= min && singleUser.rank <= max);
+export function checkIfMatchmaking() {
+  // Object.values(rooms).forEach((room) => {
+  //   // const roomId = Object.keys(rooms)[Object.values(rooms).indexOf(room)];
+  //   // console.log({ roomId });
+  //   console.log({ room });
+  //   // const roomSize = room.length;
+  //   if (room.length > 0 && room.length < minRoomSize) {
+  //     delete rooms[room[0].id];
+  //   }
+  // });
+  // // Object.keys(rooms).forEach((room) => {
+  // //   console.log({ room });
+  // // });
 
-  const newRoomId = Math.random().toString(16).substr(2, 15);
+  const newRoomId = Math.random().toString(16).slice(2, 15);
   rooms[newRoomId] = [];
-  machedUsers.forEach((singleUser) => {
-    const room = singleUser.room !== undefined ? singleUser.room : '';
+
+  queue.forEach((singleUser) => {
+    const room = singleUser.room !== '' ? singleUser.room : '';
+
     sendUniqueRoom(socketIds[singleUser.id], 'matched', room);
     const newUserToRoom = {
       ...singleUser,
@@ -115,13 +129,13 @@ export function checkIfMatchmaking(min: number, max: number) {
     };
 
     rooms[newRoomId].push(newUserToRoom);
+    console.table(singleUser);
 
     queue = queue.filter((queueUser) => queueUser.id !== singleUser.id);
   });
 }
 
 export function sendUniqueRoom(userId: string, emitId: string, message?: string) {
-  console.log(`SEND UNIQUE ${userId}, ${emitId} ${message}`);
   if (emitId) {
     io.sockets.to(userId).emit(emitId, message);
   }

@@ -1,7 +1,7 @@
 export interface User {
   userName: string;
   id: string;
-  room?: string;
+  room: string;
   rank: number;
   hasPlayed: boolean;
 }

@@ -1,4 +1,4 @@
-import { Box, Button, Heading, Spinner, Tag, TagLabel } from '@chakra-ui/react';
+import { Box, Button, Heading, Spinner, Tag, TagLabel, Text, VStack } from '@chakra-ui/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ContainerComponent } from '../../../components/ContainerComponent';
@@ -49,14 +49,14 @@ export const HomeQueue = () => {
 
   useEffect(() => {
     socket.on('match-accepted', (users: User[]) => {
-      const newUsers: User[] = users.map((singleUser: User) => ({
-        id: singleUser.id,
-        userName: singleUser.userName,
-        rank: singleUser.rank,
+      const newUsers: User[] = users.map(({ id, userName, rank, room }: User) => ({
+        id,
+        userName,
+        rank,
+        room,
       }));
       handleSetUsers(newUsers);
 
-      console.log(newUsers);
       history.push('/game');
     });
   }, []);
@@ -76,6 +76,13 @@ export const HomeQueue = () => {
           <ModalComponent isOpen={isOpen} onClose={onClose}>
             {matchFound && !matchAccepted ? (
               <AcepMatched onAcepted={handleAcepted} />
+            ) : matchAccepted ? (
+              <VStack>
+                <Text my={3} color={'white'}>
+                  Esperando que el otro jugador acepte la partida...
+                </Text>
+                <Spinner thickness='6px' speed='0.65s' emptyColor='gray.200' color='teal' size='xl' />
+              </VStack>
             ) : (
               <Spinner thickness='6px' speed='0.65s' emptyColor='gray.200' color='teal' size='xl' />
             )}
