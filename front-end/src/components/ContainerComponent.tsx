@@ -8,9 +8,9 @@ interface Props {
 export const ContainerComponent = ({ children }: Props) => {
   return (
     <Container
-      maxW={'270px'}
+      maxW={'370px'}
       w='full'
-      maxH={'270px'}
+      maxH={'400px'}
       h='full'
       boxShadow={'2xl'}
       bg='blackAlpha.800'

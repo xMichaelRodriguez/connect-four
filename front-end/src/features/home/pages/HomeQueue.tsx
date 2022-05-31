@@ -1,5 +1,6 @@
-import { Box, Button, Heading, Spinner, Tag, TagLabel, Text, useDisclosure } from '@chakra-ui/react';
+import { Box, Button, Heading, Spinner, Tag, TagLabel } from '@chakra-ui/react';
 import React, { useContext, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { ContainerComponent } from '../../../components/ContainerComponent';
 import { ModalComponent } from '../../../components/ModalComponent';
 import { AuthContext, User } from '../../../context/AuthContext';
@@ -9,9 +10,12 @@ import { AcepMatched } from '../components/AcepMatched';
 import { TotalUsers } from '../components/TotalUsers';
 
 export const HomeQueue = () => {
-  const { auth, handleSetAuth } = useContext(AuthContext);
+  const history = useHistory();
+  const { auth, handleSetAuth, handleSetUsers } = useContext(AuthContext);
   const { onOpen, isOpen, onClose } = useContext(ModalContext);
+
   const [matchFound, setMatchFound] = useState(false);
+  const [matchAccepted, setMatchAccepted] = useState(false);
   const handleMatchmaking = () => {
     socket.emit('matchmaking', {
       userId: auth.id,
@@ -23,11 +27,11 @@ export const HomeQueue = () => {
   };
 
   const handleAcepted = () => {
-    console.log();
     socket.emit('acepted-matched', {
       id: auth.id,
       hasPlayed: auth.hasPlayed,
     });
+    setMatchAccepted(true);
   };
 
   useEffect(() => {
@@ -38,9 +42,22 @@ export const HomeQueue = () => {
     });
 
     socket.on('in-room', (data: User) => {
-      
       handleSetAuth(data);
-      console.log(data)
+      console.log(data);
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.on('match-accepted', (users: User[]) => {
+      const newUsers: User[] = users.map((singleUser: User) => ({
+        id: singleUser.id,
+        userName: singleUser.userName,
+        rank: singleUser.rank,
+      }));
+      handleSetUsers(newUsers);
+
+      console.log(newUsers);
+      history.push('/game');
     });
   }, []);
 
@@ -57,7 +74,7 @@ export const HomeQueue = () => {
             Find Match
           </Button>
           <ModalComponent isOpen={isOpen} onClose={onClose}>
-            {matchFound ? (
+            {matchFound && !matchAccepted ? (
               <AcepMatched onAcepted={handleAcepted} />
             ) : (
               <Spinner thickness='6px' speed='0.65s' emptyColor='gray.200' color='teal' size='xl' />

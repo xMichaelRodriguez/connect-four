@@ -11,6 +11,8 @@ import { IRoom, ISocketId, User } from './interfaces';
 // config
 export let users: User[] = [];
 export let rooms: IRoom = {};
+// const maxRank = 20;
+// const rankInterval = 20;
 export let socketIds: ISocketId = {};
 export let updateInterval = 3000;
 export let minRoomSize = 2;
@@ -91,6 +93,7 @@ export function generateIntervalObject(max: number, interval: number) {
   return obj;
 }
 
+// const rankCheck = generateIntervalObject(maxRank, rankInterval);
 export function generateRoomId() {
   return Math.random().toString(36).substring(2, 15);
 }
@@ -122,4 +125,10 @@ export function sendUniqueRoom(userId: string, emitId: string, message?: string)
   if (emitId) {
     io.sockets.to(userId).emit(emitId, message);
   }
+}
+
+export function findUserIndexInRoom(userId: string, roomId: string) {
+  const userIndex = rooms[roomId].findIndex((userInRoom) => userInRoom.id === userId);
+
+  return userIndex;
 }
