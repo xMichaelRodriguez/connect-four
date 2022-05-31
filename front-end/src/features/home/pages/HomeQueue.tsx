@@ -1,18 +1,14 @@
-import { Box, Button, Heading, Spinner, Tag, TagLabel, Text, VStack } from '@chakra-ui/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { ContainerComponent } from '../../../components/ContainerComponent';
-import { ModalComponent } from '../../../components/ModalComponent';
 import { AuthContext, User } from '../../../context/AuthContext';
 import { ModalContext } from '../../../context/ModalContext';
 import { socket } from '../../../lib/sockets';
-import { AcepMatched } from '../components/AcepMatched';
-import { TotalUsers } from '../components/TotalUsers';
+import { HomeView } from '../views/HomeView';
 
 export const HomeQueue = () => {
   const history = useHistory();
   const { auth, handleSetAuth, handleSetUsers } = useContext(AuthContext);
-  const { onOpen, isOpen, onClose } = useContext(ModalContext);
+  const { onOpen } = useContext(ModalContext);
 
   const [matchFound, setMatchFound] = useState(false);
   const [matchAccepted, setMatchAccepted] = useState(false);
@@ -62,34 +58,12 @@ export const HomeQueue = () => {
   }, []);
 
   return (
-    <>
-      <ContainerComponent>
-        <TotalUsers />
-        <Heading>{auth && auth.userName}</Heading>
-        <Tag my={5} size={'md'} borderRadius='md' colorScheme={'teal'} variant='outline'>
-          <TagLabel>Rank: {auth && auth.rank}</TagLabel>
-        </Tag>
-        <Box>
-          <Button variant={'outline'} colorScheme={'teal'} onClick={handleMatchmaking}>
-            Find Match
-          </Button>
-          <ModalComponent isOpen={isOpen} onClose={onClose}>
-            {matchFound && !matchAccepted ? (
-              <AcepMatched onAcepted={handleAcepted} />
-            ) : matchAccepted ? (
-              <VStack>
-                <Text my={3} color={'white'}>
-                  Esperando que el otro jugador acepte la partida...
-                </Text>
-                <Spinner thickness='6px' speed='0.65s' emptyColor='gray.200' color='teal' size='xl' />
-              </VStack>
-            ) : (
-              <Spinner thickness='6px' speed='0.65s' emptyColor='gray.200' color='teal' size='xl' />
-            )}
-          </ModalComponent>
-        </Box>
-      </ContainerComponent>
-    </>
+    <HomeView
+      handleAccept={handleAcepted}
+      handleMatchmaking={handleMatchmaking}
+      matchFound={matchFound}
+      matchAccepted={matchAccepted}
+    />
   );
 };
 ``;

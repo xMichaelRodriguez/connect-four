@@ -103,19 +103,6 @@ setInterval(() => {
 }, updateInterval);
 
 export function checkIfMatchmaking() {
-  // Object.values(rooms).forEach((room) => {
-  //   // const roomId = Object.keys(rooms)[Object.values(rooms).indexOf(room)];
-  //   // console.log({ roomId });
-  //   console.log({ room });
-  //   // const roomSize = room.length;
-  //   if (room.length > 0 && room.length < minRoomSize) {
-  //     delete rooms[room[0].id];
-  //   }
-  // });
-  // // Object.keys(rooms).forEach((room) => {
-  // //   console.log({ room });
-  // // });
-
   const newRoomId = Math.random().toString(16).slice(2, 15);
   rooms[newRoomId] = [];
 
