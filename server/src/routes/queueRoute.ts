@@ -26,7 +26,6 @@ export default (io: Server, socket: Socket) => {
 
     // checka si el usuario en la sala ha aceptado match y el total de usuarios en la sala es 2
     if (!currentRoomHasNotAccepted && currentRoomLength) {
-      // console.log({ currentRoom });
       io.in(roomId).emit('match-accepted', currentRoom);
       delete rooms[roomId];
       io.socketsLeave(roomId);
@@ -42,14 +41,12 @@ export default (io: Server, socket: Socket) => {
   });
 
   socket.on('match-rejected', ({ id }: User) => {
-
     const roomId = findRoomId(id);
 
     const currentRoom = rooms[roomId];
-    Object.values(currentRoom).forEach(room => {
+    Object.values(currentRoom).forEach((room) => {
       io.sockets.to(room.id).emit('rejected-match', 'Match Rejected :(');
-    })
+    });
     delete rooms[roomId];
-  })
+  });
 };
-

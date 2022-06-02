@@ -1,8 +1,7 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../../../context/AuthContext';
-import { baseUrl } from '../../../lib/baseUrl';
 import { socket } from '../../../lib/sockets';
 import { AuthView } from '../views/AuthView';
 

@@ -12,7 +12,7 @@ export const UserBoxLeft = ({ user }: Props) => {
       <TagLabel fontSize={'md'} key={user.id}>
         <Icon as={FaUserAlt} />
         <Text>{user.userName}</Text>
-        <Divider variant='dashed' my={3}/>
+        <Divider variant='dashed' my={3} />
         <Text>Rank: {user.rank}</Text>
       </TagLabel>
     </Tag>
