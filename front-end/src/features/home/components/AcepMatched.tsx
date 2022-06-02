@@ -4,10 +4,16 @@ import { ModalContext } from '../../../context/ModalContext';
 
 interface Props {
   onAcepted: () => void;
+  onRejected: () => void;
 }
 
-export const AcepMatched = ({ onAcepted }: Props) => {
+export const AcepMatched = ({ onAcepted, onRejected }: Props) => {
   const { onClose } = useContext(ModalContext);
+
+  const handleRejectMatch = () => {
+    onRejected();
+    onClose();
+  };
   return (
     <VStack>
       <Heading my={3}> New Match Found</Heading>
@@ -15,7 +21,7 @@ export const AcepMatched = ({ onAcepted }: Props) => {
         <Button colorScheme='teal' onClick={onAcepted}>
           Accept
         </Button>
-        <Button colorScheme='teal' variant='outline' onClick={onClose}>
+        <Button colorScheme='teal' variant='outline' onClick={handleRejectMatch}>
           Reject
         </Button>
       </Stack>

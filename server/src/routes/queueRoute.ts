@@ -1,6 +1,6 @@
 import { Server, Socket } from 'socket.io';
 import { User } from '../interfaces';
-import { queue, users, findRoomId, findUserIndexInRoom, rooms } from '..';
+import { queue, users, findRoomId, findUserIndexInRoom, rooms, minRoomSize } from '..';
 interface IResponse {
   userId: string;
   hasPlayed: boolean;
@@ -14,6 +14,7 @@ export default (io: Server, socket: Socket) => {
 
   socket.on('acepted-matched', ({ id }: User) => {
     const roomId = findRoomId(id);
+
     const userIndex = findUserIndexInRoom(id, roomId);
     socket.join(roomId);
     const currentRoom = rooms[roomId];
@@ -21,7 +22,7 @@ export default (io: Server, socket: Socket) => {
 
     const currentRoomHasNotAccepted = currentRoom.map((userInRoom) => userInRoom.hasPlayed).includes(false);
 
-    const currentRoomLength = currentRoom.length <= 2;
+    const currentRoomLength = currentRoom.length === minRoomSize;
 
     // checka si el usuario en la sala ha aceptado match y el total de usuarios en la sala es 2
     if (!currentRoomHasNotAccepted && currentRoomLength) {
@@ -39,4 +40,16 @@ export default (io: Server, socket: Socket) => {
     const myUser = users.filter((user) => user.id === id)[0];
     io.sockets.to(myUser.id).emit('in-room', myUser);
   });
+
+  socket.on('match-rejected', ({ id }: User) => {
+
+    const roomId = findRoomId(id);
+
+    const currentRoom = rooms[roomId];
+    Object.values(currentRoom).forEach(room => {
+      io.sockets.to(room.id).emit('rejected-match', 'Match Rejected :(');
+    })
+    delete rooms[roomId];
+  })
 };
+

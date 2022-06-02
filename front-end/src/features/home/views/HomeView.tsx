@@ -10,11 +10,20 @@ import { TotalUsers } from '../components/TotalUsers';
 interface Props {
   matchAccepted: boolean;
   handleAccept: () => void;
+  handelReject: () => void;
   handleMatchmaking: () => void;
   matchFound: boolean;
+  matchRejected: string;
 }
 
-export const HomeView = ({ matchAccepted, handleAccept, handleMatchmaking, matchFound }: Props) => {
+export const HomeView = ({
+  matchAccepted,
+  handleAccept,
+  handelReject,
+  handleMatchmaking,
+  matchFound,
+  matchRejected,
+}: Props) => {
   const { auth } = useContext(AuthContext);
   const { isOpen, onClose } = useContext(ModalContext);
 
@@ -28,10 +37,10 @@ export const HomeView = ({ matchAccepted, handleAccept, handleMatchmaking, match
         </Tag>
         <Box>
           <Button variant={'outline'} colorScheme={'teal'} onClick={handleMatchmaking}>
-            Finding Match
+            Battle
           </Button>
           <ModalComponent isOpen={isOpen} onClose={onClose}>
-            <AcepMatched onAcepted={handleAccept} />
+            <AcepMatched onAcepted={handleAccept} onRejected={handelReject} />
           </ModalComponent>
         </Box>
       </ContainerComponent>
@@ -52,7 +61,7 @@ export const HomeView = ({ matchAccepted, handleAccept, handleMatchmaking, match
           <ModalComponent isOpen={isOpen} onClose={onClose}>
             <VStack h={'100px'}>
               <Text fontWeight={'bold'} color={'white'}>
-                Esperando que el otro jugador acepte la partida...
+                Waiting for the other player to accept the game
               </Text>
               <Spinner thickness='6px' speed='0.65s' emptyColor='gray.200' color='teal' size='xl' />
             </VStack>
@@ -62,6 +71,30 @@ export const HomeView = ({ matchAccepted, handleAccept, handleMatchmaking, match
     );
   }
 
+  if (matchRejected !== '') {
+    <ContainerComponent>
+      <TotalUsers />
+      <Heading>{auth && auth.userName}</Heading>
+      <Tag my={5} size={'md'} borderRadius='md' colorScheme={'teal'} variant='outline'>
+        <TagLabel>Rank: {auth && auth.rank}</TagLabel>
+      </Tag>
+      <Box>
+        <Button variant={'outline'} colorScheme={'teal'} onClick={handleMatchmaking}>
+          Battle
+        </Button>
+        <ModalComponent isOpen={isOpen} onClose={onClose}>
+          <VStack h={'100px'}>
+            <Text fontWeight={'bold'} color={'white'}>
+              {matchRejected}
+            </Text>
+            <Button variant={'solid'} colorScheme='cyan'>
+              Close
+            </Button>
+          </VStack>
+        </ModalComponent>
+      </Box>
+    </ContainerComponent>;
+  }
   return (
     <ContainerComponent>
       <TotalUsers />
@@ -71,10 +104,13 @@ export const HomeView = ({ matchAccepted, handleAccept, handleMatchmaking, match
       </Tag>
       <Box>
         <Button variant={'outline'} colorScheme={'teal'} onClick={handleMatchmaking}>
-          Finding Match
+          Battle
         </Button>
         <ModalComponent isOpen={isOpen} onClose={onClose}>
-          <Spinner thickness='6px' speed='0.65s' emptyColor='gray.200' color='teal' size='xl' />
+          <VStack>
+            <Text>Searching for oponents</Text>
+            <Spinner thickness='6px' speed='0.65s' emptyColor='gray.200' color='teal' size='xl' />
+          </VStack>
         </ModalComponent>
       </Box>
     </ContainerComponent>
