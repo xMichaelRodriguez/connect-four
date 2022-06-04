@@ -1,15 +1,18 @@
 import React from 'react';
-import { Box, ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 import { Navigation } from './routes/Navigation';
 import { AuthProvider } from './context/AuthProvider';
-
+import { BrowserRouter as Router } from 'react-router-dom';
+import theme from './theme/theme';
 function App() {
   return (
-    <ChakraProvider>
-      <AuthProvider>
-        <Navigation />
-      </AuthProvider>
-    </ChakraProvider>
+    <AuthProvider>
+      <ChakraProvider theme={theme}>
+        <Router>
+          <Navigation />
+        </Router>
+      </ChakraProvider>
+    </AuthProvider>
   );
 }
 

@@ -5,7 +5,7 @@ import { socket } from '../../../lib/sockets';
 export const TotalUsers = () => {
   const [totalUser, setTotalUser] = useState(0);
   useEffect(() => {
-    socket.on('userCount', (data: number) => {
+    socket.on('updateUserActive', (data: number) => {
       setTotalUser(data);
     });
   }, [totalUser]);
