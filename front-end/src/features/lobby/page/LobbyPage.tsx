@@ -6,7 +6,7 @@ import { AuthContext, User } from '../../../context/AuthContext';
 import { UserBoxLeft } from '../components/UserBoxLeft';
 import { UserBoxRight } from '../components/UserBoxRight';
 
-export const GameScreen = () => {
+export const LobbyPage = () => {
   const { users, auth } = useContext(AuthContext);
 
   const handleEntryGame = () => {

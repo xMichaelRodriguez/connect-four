@@ -63,7 +63,7 @@ export const HomeQueue = () => {
       }));
       handleSetUsers(newUsers);
 
-      history.push('/game');
+      history.push('/lobby');
     });
   }, []);
 
