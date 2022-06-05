@@ -4,19 +4,14 @@ import { RowComp } from './RowComp';
 
 interface Props {
   rows: number[];
+  colIndex: number;
 }
 
-export const ColComp = (props: Props) => {
-  const boxRef = useRef<HTMLDivElement>(document.createElement('div'));
-  const handleClick = () => {
-    console.log('click');
-    // boxRef.current.style.backgroundColor = 'red';
-    boxRef.current.style.backgroundColor = 'red';
-  };
+export const ColComp = ({ rows, colIndex }: Props) => {
   return (
-    <Tr>
-      {props.rows.map((index) => (
-        <RowComp key={index} handleClick={handleClick} boxRef={boxRef} />
+    <Tr borderRadius={'20%'} borderWidth={'0.1em'} >
+      {rows.map((index) => (
+        <RowComp key={index} colIndex={colIndex} rowIndex={index} />
       ))}
     </Tr>
   );

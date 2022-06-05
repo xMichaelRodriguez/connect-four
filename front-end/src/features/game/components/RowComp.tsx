@@ -1,25 +1,25 @@
-import { Box, Input, Td } from '@chakra-ui/react';
-import React from 'react';
+import { Td } from '@chakra-ui/react';
+import React, { useRef } from 'react';
 
 interface IProps {
-  handleClick: () => void;
-  boxRef: React.MutableRefObject<HTMLDivElement> ;
+  colIndex: number;
+  rowIndex: number;
 }
-export const RowComp = ({ handleClick, boxRef }: IProps) => {
+export const RowComp = ({ colIndex, rowIndex }: IProps) => {
+  const ref = useRef<HTMLTableCellElement>(document.createElement('td'));
+  const handleClick = () => {
+    console.log(`Clicked on ${colIndex} ${rowIndex}`);
+    ref.current.style.backgroundColor = 'red';
+  };
   return (
-    <Td>
-      <Box
-        ref={boxRef}
-        onClick={handleClick}
-        borderRadius={'20%'}
-        borderWidth={'1px'}
-        borderColor={'white'}
-        maxW='3em'
-        bg='transparent'
-        color='white'
-        h='2em'
-        w='2em'
-      ></Box>
-    </Td>
+    <Td
+      ref={ref}
+      onClick={handleClick}
+      borderRadius={'30%'}
+      borderWidth={'0.1em'}
+      bg="transparent"
+      h='5em'
+      w='5em'
+    ></Td>
   );
 };

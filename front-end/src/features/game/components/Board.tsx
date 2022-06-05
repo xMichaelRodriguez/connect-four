@@ -1,4 +1,4 @@
-import { Table, TableContainer } from '@chakra-ui/react';
+import { Table, TableContainer, Tbody } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { ColComp } from './ColComp';
 
@@ -6,7 +6,7 @@ export const Board = () => {
   const [col, setCol] = useState<number[]>([]);
   const [row, setRow] = useState<number[]>([]);
 
-  const crearArreglo = (nColRow: number, cb: React.Dispatch<React.SetStateAction<number[]>>) => {
+  const createArray = (nColRow: number, cb: React.Dispatch<React.SetStateAction<number[]>>) => {
     let r = [];
     for (let i = 0; i < nColRow; i++) {
       r.push(i);
@@ -15,13 +15,16 @@ export const Board = () => {
   };
 
   useEffect(() => {
-    crearArreglo(7, setCol);
-    crearArreglo(6, setRow);
+    createArray(6, setCol);
+    createArray(7, setRow);
   }, []);
+
   return (
     <TableContainer>
-      <Table variant={'simple'}>
-        {col.length !== 0 && col.map((index) => <ColComp rows={row} key={index} />)}
+      <Table variant={'simple'}  overflowX={'auto'}>
+        <Tbody>
+          {col.length !== 0 && col.map((index) => <ColComp rows={row} colIndex={index} key={index} />)}
+        </Tbody>
       </Table>
     </TableContainer>
   );

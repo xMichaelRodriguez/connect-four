@@ -15,14 +15,15 @@ export const ContainerGame = ({ children, bg = 'blackAlpha.800', maxW = '370px',
       w='full'
       maxH={maxH}
       h='full'
-      boxShadow={'2xl'}
+      boxShadow={'md'}
       bg={bg}
       rounded={'md'}
       overflow='hidden'
       p={3}
       color='white'
+      overflowY={'auto'}
     >
-      <Center h='full' justifyContent={'center'} alignItems='center' flexDirection='column'>
+      <Center minH='max-content' justifyContent={'center'} mx={3} alignItems='center' flexDirection='column'>
         {children}
       </Center>
     </Container>
