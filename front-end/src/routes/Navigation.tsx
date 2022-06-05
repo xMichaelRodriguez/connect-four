@@ -9,7 +9,6 @@ import { routes } from './routes';
 export const Navigation = () => {
   const history = useHistory();
   const { auth } = useContext(AuthContext);
-  const { isOpen, onClose } = useDisclosure();
   useEffect(() => {
     if (Object.entries(auth).length === 0) {
       history.replace('/');

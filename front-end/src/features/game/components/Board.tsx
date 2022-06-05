@@ -20,7 +20,9 @@ export const Board = () => {
   }, []);
   return (
     <TableContainer>
-      <Table variant={'simple'}>{col.length != 0 ? col.map(() => <ColComp rows={row} />) : null}</Table>
+      <Table variant={'simple'}>
+        {col.length !== 0 && col.map((index) => <ColComp rows={row} key={index} />)}
+      </Table>
     </TableContainer>
   );
 };

@@ -1,20 +1,38 @@
-import { Divider, Icon, Tag, TagLabel, Text } from '@chakra-ui/react';
 import React from 'react';
-import { User } from '../../../context/AuthContext';
+import { Divider, Icon, Tag, TagLabel, Text } from '@chakra-ui/react';
 import { FaUserAlt } from 'react-icons/fa';
+import { motion } from 'framer-motion';
+
+import { User } from '../../../context/AuthContext';
 interface Props {
   user: User;
 }
 
 export const UserBoxLeft = ({ user }: Props) => {
   return (
-    <Tag size={'lg'} key={user.id} variant='outline' colorScheme='cyan' h={'100px'} w={'100px'}>
-      <TagLabel fontSize={'md'} key={user.id}>
-        <Icon as={FaUserAlt} />
-        <Text>{user.userName}</Text>
-        <Divider variant='dashed' my={3} />
-        <Text>Rank: {user.rank}</Text>
-      </TagLabel>
-    </Tag>
+    <motion.div
+      initial={{
+        x: -20,
+      }}
+      animate={{
+        x: 30,
+        transition: {
+          duration: 1,
+          ease: 'easeInOut',
+          repeat: Infinity,
+          repeatType: 'reverse',
+        },
+      }}
+    >
+      <Tag size={'lg'} textAlign='center' variant='outline' colorScheme='teal' h={'100px'} w={'100px'}>
+        <TagLabel fontSize={'md'} textAlign='center'>
+          <Text textAlign='center' noOfLines={[1, 2, 3]} my={1}>
+            {user.userName}
+          </Text>
+
+          <Icon as={FaUserAlt} textAlign='center' />
+        </TagLabel>
+      </Tag>
+    </motion.div>
   );
 };
