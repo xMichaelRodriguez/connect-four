@@ -1,12 +1,15 @@
 const CONNECT = 4;
 const COLUMNS = 7;
-const ROWS = 6;
-const EMPTY_SPACE = '  '
-interface IPropsCount {
+const ROWS = 6
+const EMPTY_SPACE = null
+interface IWinner {
+    player: number;
+    board: number[][]
+}
+interface IPropsCount extends IWinner {
     x: number;
     y: number;
-    player: string;
-    board: any
+
 }
 
 
@@ -21,6 +24,7 @@ export const countUp = ({ x, y, player, board }: IPropsCount) => {
             counter = 0;
         }
     }
+
     return counter;
 };
 
@@ -68,7 +72,7 @@ export const countDownRight = ({ x, y, player, board }: IPropsCount) => {
     return counter;
 };
 
-export const isWinner = ({ player, board }: IPropsCount) => {
+export const isWinner = ({ player, board }: IWinner) => {
     for (let y = 0; y < ROWS; y++) {
         for (let x = 0; x < COLUMNS; x++) {
             let count = 0;
@@ -85,7 +89,7 @@ export const isWinner = ({ player, board }: IPropsCount) => {
     return false;
 };
 
-export const isTie = ({ board }: IPropsCount) => {
+export const isTie = ({ board }: { board: number[][] }) => {
     for (let y = 0; y < ROWS; y++) {
         for (let x = 0; x < COLUMNS; x++) {
             const currentCell = board[y][x];
@@ -95,4 +99,23 @@ export const isTie = ({ board }: IPropsCount) => {
         }
     }
     return true;
+}
+
+export const getFirstEmptyRow = (columnIndex: number, board: number[][]) => {
+
+    for (let i = ROWS - 1; i >= 0; i--) {
+        if (board[i][columnIndex] === EMPTY_SPACE) {
+            return i;
+        }
+
+    }
+    return -1;
+}
+
+export const togglePlayer = (currentPlayer: number) => {
+    return currentPlayer === 1 ? 2 : 1
+}
+
+export const askUserForAnotherMatch = () => {
+    return confirm("Do you want to play again?");
 }

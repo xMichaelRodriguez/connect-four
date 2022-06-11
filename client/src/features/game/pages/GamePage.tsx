@@ -1,12 +1,29 @@
-import { Box, Container, Flex, HStack, Tag, TagLabel, TagLeftIcon, VStack } from '@chakra-ui/react';
-import React from 'react';
+import { Box, Flex, HStack, Tag, TagLabel, TagLeftIcon, VStack } from '@chakra-ui/react';
 import { ContainerGame } from '../components/ContainerGame';
 import { UserPointsLeft } from '../components/UserPointsLeft';
 import { UserPointsRight } from '../components/UserPointsRight';
 import { Board } from '../components/Board';
 import { AiOutlineNodeIndex } from 'react-icons/ai';
 import { SiGamejolt } from 'react-icons/si';
+import { useState } from 'react';
+
+import { GameProvider } from '../context/GameProvider';
+
+export interface IPropsState {
+  board: number[][];
+  color: string;
+  player: number;
+  isWin: boolean;
+}
 export const GamePage = () => {
+  const [state, setState] = useState<IPropsState>({
+    board: Array(6)
+      .fill(0)
+      .map(() => Array(7).fill(null)),
+    color: 'red',
+    player: 1,
+    isWin: false,
+  });
   return (
     <VStack maxH={'full'} maxW={'full'}>
       <Flex
@@ -35,7 +52,9 @@ export const GamePage = () => {
         <Box display='block' bg='red.500' h='3.5em' w='3.5em' borderRadius={'100%'}></Box>
       </VStack>
       <ContainerGame maxH='33.5em' maxW='50.5em'>
-        <Board />
+        <GameProvider>
+          <Board {...state} />
+        </GameProvider>
       </ContainerGame>
     </VStack>
   );
