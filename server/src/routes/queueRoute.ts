@@ -1,15 +1,14 @@
 import { Server, Socket } from 'socket.io';
 import { User } from '../interfaces';
-import { queue, users, findRoomId, findUserIndexInRoom, rooms, minRoomSize } from '..';
+import { queue, users, findRoomId, findUserIndexInRoom, rooms, minRoomSize, removeUserFromQueue } from '..';
 interface IResponse {
   userId: string;
-  hasPlayed: boolean;
-  rank: number;
+  readyToPlay: boolean;
 }
 export default (io: Server, socket: Socket) => {
   socket.on('matchmaking', (data: IResponse) => {
     const userToQueue = users.filter((singleUser) => singleUser.id === data.userId)[0];
-    queue.push({ ...userToQueue, rank: data.rank });
+    queue.push({ ...userToQueue });
   });
 
   socket.on('acepted-matched', ({ id }: User) => {
@@ -18,22 +17,22 @@ export default (io: Server, socket: Socket) => {
     const userIndex = findUserIndexInRoom(id, roomId);
     socket.join(roomId);
     const currentRoom = rooms[roomId];
-    currentRoom[userIndex].hasPlayed = true;
+    currentRoom[userIndex].readyToPlay = true;
 
-    const currentRoomHasNotAccepted = currentRoom.map((userInRoom) => userInRoom.hasPlayed).includes(false);
+    const currentRoomHasNotAccepted = currentRoom.map((userInRoom) => userInRoom.readyToPlay).includes(false);
 
     const currentRoomLength = currentRoom.length === minRoomSize;
 
-    // checka si el usuario en la sala ha aceptado match y el total de usuarios en la sala es 2
+    //check if the user in the room has accepted a match and the total number of users in the room is 2
     if (!currentRoomHasNotAccepted && currentRoomLength) {
       io.in(roomId).emit('match-accepted', currentRoom);
       delete rooms[roomId];
       io.socketsLeave(roomId);
     }
-    // si no busca entre los usuarios conectados si coincide el id que optenemos lo pasamos que si acepto
+    // opposite case, search among the connected users if the id that we choose matches what we pass on if I accept
     users.forEach((user) => {
       if (user.id === id) {
-        user.hasPlayed = true;
+        user.readyToPlay = true;
       }
     });
     const myUser = users.filter((user) => user.id === id)[0];
@@ -41,12 +40,8 @@ export default (io: Server, socket: Socket) => {
   });
 
   socket.on('match-rejected', ({ id }: User) => {
-    const roomId = findRoomId(id);
-
-    const currentRoom = rooms[roomId];
-    Object.values(currentRoom).forEach((room) => {
-      io.sockets.to(room.id).emit('rejected-match', 'Match Rejected :(');
-    });
-    delete rooms[roomId];
+    console.log({ queue })
+    removeUserFromQueue(id);
+    console.log({ queue })
   });
 };

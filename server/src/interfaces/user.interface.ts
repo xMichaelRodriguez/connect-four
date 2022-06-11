@@ -2,8 +2,7 @@ export interface User {
   userName: string;
   id: string;
   room: string;
-  rank: number;
-  hasPlayed: boolean;
+  readyToPlay: boolean;
 }
 
 export interface ISocketId {
