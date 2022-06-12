@@ -1,23 +1,18 @@
 import { Td } from '@chakra-ui/react';
-import { useContext, useEffect, useRef, useState } from 'react';
-import { togglePlayer } from '../../../lib/utilsGame';
+import { useContext, useEffect, useState } from 'react';
 
 import { GameContext } from '../context/GameContext';
 interface IProps {
   colIndex: number;
   rowIndex: number;
 }
-const initialPlayer = Math.floor(Math.random() * 2) + 1;
+
 export const RowComp = ({ colIndex, rowIndex }: IProps) => {
-  const { board, handlePutToken } = useContext(GameContext);
+  const { board, handlePutToken, currentPlayer } = useContext(GameContext);
   const [state, setstate] = useState('');
-  const [currentPlayer, setCurrentPlayer] = useState(initialPlayer);
 
   const handleClick = async () => {
-    console.log({ currentPlayer });
     handlePutToken({ rowIndex, currentPlayer });
-    const newCurrentPlayer = await togglePlayer(currentPlayer);
-    setCurrentPlayer(newCurrentPlayer);
   };
 
   useEffect(() => {

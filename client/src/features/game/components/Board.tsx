@@ -1,8 +1,10 @@
 import { Table, TableContainer, Tbody } from '@chakra-ui/react';
-import { IPropsState } from '../pages/GamePage';
+import { useContext } from 'react';
+import { GameContext } from '../context/GameContext';
 import { ColComp } from './ColComp';
 
-export const Board = ({ board }: IPropsState) => {
+export const Board = () => {
+  const { board } = useContext(GameContext);
   return (
     <TableContainer>
       <Table variant={'simple'} overflowX={'auto'}>

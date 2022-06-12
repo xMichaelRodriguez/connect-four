@@ -10,7 +10,7 @@ export type Game = {
 export interface IGameContextProps {
   board: number[][];
   color: string;
-  player: number;
+  currentPlayer: number;
   isWin: boolean;
   handleChangeBoard: ({ colIndex, rowIndex, currentPlayer }: IChangeBoard) => void;
   handlePutToken: ({ rowIndex, currentPlayer }: IPropsUserIndex) => void;

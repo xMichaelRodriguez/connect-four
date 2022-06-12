@@ -3,14 +3,17 @@ import { Navigation } from './routes/Navigation';
 import { AuthProvider } from './context/AuthProvider';
 import { BrowserRouter as Router } from 'react-router-dom';
 import theme from './theme/theme';
+import { GameProvider } from './features/game/context/GameProvider';
 function App() {
   return (
     <AuthProvider>
-      <ChakraProvider theme={theme}>
-        <Router>
-          <Navigation />
-        </Router>
-      </ChakraProvider>
+      <GameProvider>
+        <ChakraProvider theme={theme}>
+          <Router>
+            <Navigation />
+          </Router>
+        </ChakraProvider>
+      </GameProvider>
     </AuthProvider>
   );
 }

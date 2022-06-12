@@ -23,7 +23,7 @@ export const Navigation = () => {
           ))}
           <Redirect to={routes[0].path} /> */}
           <Route path={routes[3].path} component={routes[3].component} />
-          <Redirect to='/game' />
+          <Redirect to={routes[3].path} exact />
         </Switch>
       </Flex>
     </ModalProvider>

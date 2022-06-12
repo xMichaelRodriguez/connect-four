@@ -15,7 +15,7 @@ export const routes: IRoutes[] = [
     component: HomeQueue,
     exact: false,
     name: 'queue',
-    path: '/soloq',
+    path: '/queue',
   },
   {
     component: LobbyPage,
