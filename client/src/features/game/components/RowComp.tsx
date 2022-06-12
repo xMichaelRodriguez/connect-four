@@ -28,6 +28,6 @@ export const RowComp = ({ colIndex, rowIndex }: IProps) => {
   }, [board]);
 
   return (
-    <Td onClick={handleClick} borderRadius={'30%'} borderWidth={'0.1em'} bg={state} h='5em' w='5em'></Td>
+    <Td onClick={handleClick} borderRadius={'30%'} borderWidth={'0.1em'} bg={state} h='4em' w='4em'></Td>
   );
 };
