@@ -1,13 +1,38 @@
-import React, { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Box, Flex, HStack, Tag, TagLabel, TagRightIcon, Text, VStack } from '@chakra-ui/react';
 import { AiOutlineNodeIndex } from 'react-icons/ai';
 
 import { UserPointsLeft } from '../components/UserPointsLeft';
 import { UserPointsRight } from '../components/UserPointsRight';
-import { GameContext } from '../context/GameContext';
+import { GameContext, Player } from '../context/GameContext';
+import { socket } from '../../../lib/sockets';
 
 export const HeadGame = () => {
-  const { color } = useContext(GameContext);
+  const { players, updatePlayers, color, changePlayer } = useContext(GameContext);
+
+  useEffect(() => {
+    socket.on('current-user', (currentUser) => {
+      changePlayer({ currentUser });
+    });
+  }, []);
+
+  // useEffect(() => {
+  //   const newcolor = players.users.find((user) => user.token === currentPlayer && user.color);
+  //   if (newcolor !== undefined) {
+  //     console.log({newcolor});
+  //     setColor(newcolor.color);
+  //   }
+  // }, [color]);
+
+  useEffect(() => {
+    if (Object.values(players.users).length > 0) socket.emit('game:colorUser', players.users);
+  }, []);
+
+  useEffect(() => {
+    socket.on('game:new-color-User', (users: Player[]) => {
+      updatePlayers(users);
+    });
+  }, [updatePlayers]);
   return (
     <>
       <HStack>

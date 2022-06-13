@@ -15,12 +15,19 @@ interface ICurrentPlayer {
 const initialPlayer = Math.floor(Math.random() * 2) + 1;
 export const GameProvider = ({ children }: props) => {
   const [currentPlayer, setCurrentPlayer] = useState<number>(initialPlayer);
+  const [color, setColor] = useState('');
+
   const [players, setplayers] = useState<IUserGame>({ isLose: false, isWin: false, users: [] });
   const [board, setBoard] = useState<number[][]>(
     Array(6)
       .fill(0)
       .map(() => Array(7).fill(null))
   );
+
+  const handleChangeColor = (currentUser: number) => {
+    const newColor = currentUser === 1 ? 'red' : 'blue';
+    setColor(newColor);
+  };
 
   const setTokenUserRamdon = (users: Player[]) => {
     users[0].token = currentPlayer;
@@ -36,9 +43,10 @@ export const GameProvider = ({ children }: props) => {
   };
 
   // change payer en base a la columna que seleccione el usuario
-  const changePlayer = (currentUser: number) => {
-    const player = togglePlayer(currentUser);
-    setCurrentPlayer(player);
+  const changePlayer = ({ currentUser }: { currentUser: number }) => {
+    console.log({currentUser})
+    setCurrentPlayer(currentUser);
+    handleChangeColor(currentUser);
   };
 
   const handlePutToken = async ({ rowIndex, currentPlayer }: IPropsUserIndex) => {
@@ -49,7 +57,6 @@ export const GameProvider = ({ children }: props) => {
       return;
     }
 
-    changePlayer(currentPlayer);
     await handleChangeBoard({ colIndex: firstEmptyRow, rowIndex, currentPlayer });
 
     const status: boolean = await checkGameStatus(currentPlayer);
@@ -89,7 +96,6 @@ export const GameProvider = ({ children }: props) => {
       ...players,
       users: newPlayersUpdate,
     };
-    console.log(newPlayers);
     setplayers(newPlayers);
   };
   const defaultValue = {
@@ -100,6 +106,9 @@ export const GameProvider = ({ children }: props) => {
     handlePutToken,
     handlePassUsersToPlayer,
     updatePlayers,
+    changePlayer,
+    color,
+    currentPlayer,
   };
   return <GameContext.Provider value={defaultValue}>{children}</GameContext.Provider>;
 };

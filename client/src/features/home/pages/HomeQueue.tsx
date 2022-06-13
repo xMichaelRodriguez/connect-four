@@ -8,15 +8,14 @@ import { HomeView } from '../views/HomeView';
 export const HomeQueue = () => {
   const history = useHistory();
   const { auth, handleSetAuth, handleSetUsers } = useContext(AuthContext);
-  const { onOpen } = useContext(ModalContext);
+  const { onOpen, onClose } = useContext(ModalContext);
   const [matchRejected, setMatchRejected] = useState('');
   const [matchFound, setMatchFound] = useState(false);
   const [matchAccepted, setMatchAccepted] = useState(false);
   const handleMatchmaking = () => {
     socket.emit('matchmaking', {
       userId: auth.id,
-      hasPlayed: auth.hasPlayed,
-      rank: auth.rank,
+      readiToPlay: auth.readyToPlay,
       userName: auth.userName,
     });
     onOpen();
@@ -25,7 +24,7 @@ export const HomeQueue = () => {
   const handleAcepted = () => {
     socket.emit('acepted-matched', {
       id: auth.id,
-      hasPlayed: auth.hasPlayed,
+      readyToPlay: auth.readyToPlay,
     });
     setMatchAccepted(true);
   };
@@ -42,27 +41,24 @@ export const HomeQueue = () => {
 
     socket.on('in-room', (data: User) => {
       handleSetAuth(data);
-      console.log(data);
     });
   }, []);
 
   useEffect(() => {
     socket.on('rejected-match', (data: string) => {
-      console.log(data);
       setMatchRejected(data);
     });
   }, []);
 
   useEffect(() => {
     socket.on('match-accepted', (users: User[]) => {
-      const newUsers: User[] = users.map(({ id, userName, rank, room }: User) => ({
+      const newUsers: User[] = users.map(({ id, userName, room }: User) => ({
         id,
         userName,
-        rank,
         room,
       }));
       handleSetUsers(newUsers);
-
+      onClose();
       history.push('/lobby');
     });
   }, []);

@@ -4,8 +4,8 @@ import { IChangeBoard, IPropsUserIndex } from '../interface';
 
 export interface Player extends User {
   canPlay: boolean;
-  color: string;
   token: number;
+  color: string;
 }
 export interface IUserGame {
   isLose: boolean;
@@ -14,10 +14,12 @@ export interface IUserGame {
 }
 export type IGameContextProps = {
   board: number[][];
-
+  changePlayer: ({ currentUser }: { currentUser: number }) => void;
+  currentPlayer: number;
   handleChangeBoard: ({ colIndex, rowIndex, currentPlayer }: IChangeBoard) => void;
-  handlePutToken: ({ rowIndex, currentPlayer }: IPropsUserIndex) => void;
+  color: string;
   handlePassUsersToPlayer: (users: Player[]) => void;
+  handlePutToken: ({ rowIndex, currentPlayer }: IPropsUserIndex) => void;
   isWin: boolean;
   players: IUserGame;
   updatePlayers: (players: Player[]) => void;

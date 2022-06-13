@@ -11,6 +11,7 @@ import { IRoom, ISendUniqueRoom, ISocketId, User } from './interfaces';
 
 // config
 export let users: User[] = [];
+export let currentUser: number = 1;
 export let rooms: IRoom = {};
 export let socketIds: ISocketId = {};
 export let updateInterval = 3000;
@@ -90,7 +91,6 @@ export function findRoomId(userId: string) {
   const roomIndex = singleValues.findIndex((roomMembers) => {
     return roomMembers.includes(userId);
   });
-  console.log({ roomIndex })
   const roomId = Object.keys(rooms)[roomIndex];
 
   return roomId;
@@ -174,4 +174,9 @@ export function generateRoomId() {
 // en la room de la que se encuentra el usuario
 export function updateRoomDataUser() {
 
+}
+
+export function updateCurrentUser() {
+  const initialPlayer = Math.floor(Math.random() * 2) + 1;
+  return initialPlayer
 }

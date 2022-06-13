@@ -26,8 +26,8 @@ export default (io: Server, socket: Socket) => {
     //check if the user in the room has not accepted a match and the total number of users in the room is 2
     if (!currentRoomHasNotAccepted && currentRoomLength) {
       io.in(roomId).emit('match-accepted', currentRoom);
-      delete rooms[roomId];
-      io.socketsLeave(roomId);
+      // delete rooms[roomId];
+      // io.socketsLeave(roomId);
     }
     // opposite case, search among the connected users if the id that we choose matches what we pass on if I accept
     users.forEach((user) => {
@@ -35,9 +35,10 @@ export default (io: Server, socket: Socket) => {
         user.readyToPlay = true;
       }
     });
+
     const myUser = users.filter((user) => user.id === id)[0];
     io.sockets.to(myUser.id).emit('in-room', myUser);
-    console.log('QUEUE', { rooms })
+   
   });
 
   socket.on('match-rejected', ({ id }: User) => {
