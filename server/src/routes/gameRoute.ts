@@ -34,15 +34,20 @@ export default (io: Server, socket: Socket) => {
         io.sockets.to(myUser.id).emit('game:init', myUser);
     });
 
-    socket.on('current-user', (userId:string) => {
+    socket.on('current-user', (userId: string) => {
         const roomId = findRoomId(userId);
         if (!!roomId) {
             const currentUser = updateCurrentUser()
-            console.log({currentUser})
+            console.log({ currentUser })
             io.sockets.in(roomId).emit('current-user', currentUser);
         }
     })
-
+    socket.on('game:update-active-user', ({ userId, token }: { userId: string, token: number }) => {
+        const newToken = token === 1 ? 2 : 1;
+        const roomId = findRoomId(userId);
+        console.log({ newToken })
+        io.sockets.in(roomId).emit('game:update-active-user', newToken);
+    })
 
     socket.on('game:colorUser', (players: IPlayer[]) => {
 

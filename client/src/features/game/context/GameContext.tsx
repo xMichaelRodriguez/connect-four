@@ -19,7 +19,7 @@ export type IGameContextProps = {
   handleChangeBoard: ({ colIndex, rowIndex, currentPlayer }: IChangeBoard) => void;
   color: string;
   handlePassUsersToPlayer: (users: Player[]) => void;
-  handlePutToken: ({ rowIndex, currentPlayer }: IPropsUserIndex) => void;
+  handlePutToken: ({ rowIndex, currentPlayer }: { rowIndex: number; currentPlayer: Player }) => void;
   isWin: boolean;
   players: IUserGame;
   updatePlayers: (players: Player[]) => void;

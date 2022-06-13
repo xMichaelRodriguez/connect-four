@@ -1,8 +1,8 @@
 import { ReactNode, useState } from 'react';
 import { getFirstEmptyRow, isTie, isWinner, togglePlayer } from '../../../lib/utilsGame';
-import { GameContext, IGameContextProps, IUserGame, Player } from './GameContext';
+import { GameContext, IUserGame, Player } from './GameContext';
 
-import { IChangeBoard, IPropsUserIndex } from '../interface/index';
+import { IChangeBoard } from '../interface/index';
 import { socket } from '../../../lib/sockets';
 interface props {
   children: ReactNode;
@@ -44,12 +44,16 @@ export const GameProvider = ({ children }: props) => {
 
   // change payer en base a la columna que seleccione el usuario
   const changePlayer = ({ currentUser }: { currentUser: number }) => {
-    console.log({currentUser})
     setCurrentPlayer(currentUser);
     handleChangeColor(currentUser);
   };
 
-  const handlePutToken = async ({ rowIndex, currentPlayer }: IPropsUserIndex) => {
+  // pone la ficha en el tablero
+  const handlePutToken = async ({ rowIndex, currentPlayer }: { rowIndex: number; currentPlayer: Player }) => {
+    socket.emit('game:update-active-user', {
+      userId: currentPlayer.id,
+      token: currentPlayer.token,
+    });
     const firstEmptyRow = getFirstEmptyRow(rowIndex, board);
 
     if (firstEmptyRow === -1) {
@@ -57,9 +61,10 @@ export const GameProvider = ({ children }: props) => {
       return;
     }
 
-    await handleChangeBoard({ colIndex: firstEmptyRow, rowIndex, currentPlayer });
+    await handleChangeBoard({ colIndex: firstEmptyRow, rowIndex, currentPlayer: currentPlayer.token });
 
-    const status: boolean = await checkGameStatus(currentPlayer);
+   
+    const status: boolean = await checkGameStatus(currentPlayer.token);
     if (status) {
       console.log('Game Over');
     }
@@ -110,5 +115,22 @@ export const GameProvider = ({ children }: props) => {
     color,
     currentPlayer,
   };
-  return <GameContext.Provider value={defaultValue}>{children}</GameContext.Provider>;
+  return (
+    <GameContext.Provider
+      value={{
+        board,
+        players,
+        isWin: false,
+        handleChangeBoard,
+        handlePutToken,
+        handlePassUsersToPlayer,
+        updatePlayers,
+        changePlayer,
+        color,
+        currentPlayer,
+      }}
+    >
+      {children}
+    </GameContext.Provider>
+  );
 };

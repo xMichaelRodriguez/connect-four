@@ -16,6 +16,13 @@ export const HeadGame = () => {
     });
   }, []);
 
+  useEffect(() => {
+    socket.on('game:update-active-user', (data: number) => {
+      console.log({ data });
+      changePlayer({ currentUser: data });
+    });
+  }, []);
+
   // useEffect(() => {
   //   const newcolor = players.users.find((user) => user.token === currentPlayer && user.color);
   //   if (newcolor !== undefined) {

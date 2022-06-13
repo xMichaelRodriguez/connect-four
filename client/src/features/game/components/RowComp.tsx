@@ -1,18 +1,27 @@
 import { Td } from '@chakra-ui/react';
 import { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../../../context/AuthContext';
 
-import { GameContext } from '../context/GameContext';
+import { GameContext, Player } from '../context/GameContext';
 interface IProps {
   colIndex: number;
   rowIndex: number;
 }
 
 export const RowComp = ({ colIndex, rowIndex }: IProps) => {
-  const { board, handlePutToken, players } = useContext(GameContext);
+  const { board, handlePutToken, players, currentPlayer } = useContext(GameContext);
+  const { auth } = useContext(AuthContext);
   const [state, setstate] = useState('');
-
+  const [currentPlayerNotActive, setCurrentPlayerNotActive] = useState(false);
   const handleClick = async () => {
-    handlePutToken({ rowIndex, currentPlayer: players.users[0].token });
+    if (!currentPlayerNotActive) {
+      const isValidPlayer: Player | undefined = players.users.find(
+        (user) => user.id === auth.id && currentPlayer === user.token
+      );
+      if (!!isValidPlayer) {
+        handlePutToken({ rowIndex, currentPlayer: isValidPlayer });
+      }
+    }
   };
 
   useEffect(() => {
@@ -27,7 +36,20 @@ export const RowComp = ({ colIndex, rowIndex }: IProps) => {
     return () => setstate('transparent');
   }, [board]);
 
+  useEffect(() => {
+    const isValid = players.users.some((user) => user.id === auth.id && user.token !== currentPlayer);
+    setCurrentPlayerNotActive(isValid);
+  }, []);
+
   return (
-    <Td onClick={handleClick} borderRadius={'30%'} borderWidth={'0.1em'} bg={state} h='4em' w='4em'></Td>
+    <Td
+      cursor={currentPlayerNotActive ? 'not-allowed' : ''}
+      onClick={handleClick}
+      borderRadius={'30%'}
+      borderWidth={'0.1em'}
+      bg={state}
+      h='4em'
+      w='4em'
+    ></Td>
   );
 };
