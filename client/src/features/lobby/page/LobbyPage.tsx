@@ -14,7 +14,6 @@ export const LobbyPage = () => {
   const history = useHistory();
 
   const handleEntryGame = () => {
-   
     const newPlayers: Player[] = users.map((user: User) => ({
       ...user,
       canPlay: false,
@@ -31,7 +30,7 @@ export const LobbyPage = () => {
       console.log(data);
       updatePlayers(data);
     });
-  }, []);
+  }, [updatePlayers]);
 
   return (
     <ContainerComponent>

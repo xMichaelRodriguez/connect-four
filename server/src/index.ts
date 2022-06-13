@@ -90,7 +90,9 @@ export function findRoomId(userId: string) {
   const roomIndex = singleValues.findIndex((roomMembers) => {
     return roomMembers.includes(userId);
   });
+  console.log({ roomIndex })
   const roomId = Object.keys(rooms)[roomIndex];
+
   return roomId;
 }
 

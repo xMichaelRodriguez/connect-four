@@ -23,7 +23,7 @@ export default (io: Server, socket: Socket) => {
 
     const currentRoomLength = currentRoom.length === minRoomSize;
 
-    //check if the user in the room has accepted a match and the total number of users in the room is 2
+    //check if the user in the room has not accepted a match and the total number of users in the room is 2
     if (!currentRoomHasNotAccepted && currentRoomLength) {
       io.in(roomId).emit('match-accepted', currentRoom);
       delete rooms[roomId];
@@ -37,6 +37,7 @@ export default (io: Server, socket: Socket) => {
     });
     const myUser = users.filter((user) => user.id === id)[0];
     io.sockets.to(myUser.id).emit('in-room', myUser);
+    console.log('QUEUE', { rooms })
   });
 
   socket.on('match-rejected', ({ id }: User) => {

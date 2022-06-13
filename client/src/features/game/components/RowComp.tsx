@@ -8,11 +8,11 @@ interface IProps {
 }
 
 export const RowComp = ({ colIndex, rowIndex }: IProps) => {
-  const { board, handlePutToken, currentPlayer } = useContext(GameContext);
+  const { board, handlePutToken, players } = useContext(GameContext);
   const [state, setstate] = useState('');
 
   const handleClick = async () => {
-    handlePutToken({ rowIndex, currentPlayer });
+    handlePutToken({ rowIndex, currentPlayer: players.users[0].token });
   };
 
   useEffect(() => {

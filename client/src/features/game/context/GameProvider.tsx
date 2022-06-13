@@ -3,7 +3,6 @@ import { getFirstEmptyRow, isTie, isWinner, togglePlayer } from '../../../lib/ut
 import { GameContext, IGameContextProps, IUserGame, Player } from './GameContext';
 
 import { IChangeBoard, IPropsUserIndex } from '../interface/index';
-import { User } from '../../../context/AuthContext';
 import { socket } from '../../../lib/sockets';
 interface props {
   children: ReactNode;
