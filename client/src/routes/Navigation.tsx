@@ -18,12 +18,11 @@ export const Navigation = () => {
     <ModalProvider>
       <Flex justifyContent='center' align='center' h={'100vh'}>
         <Switch>
-          {/* {routes.map(({ name, path, component, exact }) => (
+          {routes.map(({ name, path, component, exact }) => (
             <Route key={name} path={path} component={component} exact={exact} />
           ))}
-          <Redirect to={routes[0].path} /> */}
-          <Route path={routes[3].path} component={routes[3].component} />
-          <Redirect to={routes[3].path} exact />
+          <Redirect to={routes[0].path} />
+         
         </Switch>
       </Flex>
     </ModalProvider>

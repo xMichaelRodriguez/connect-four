@@ -3,6 +3,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../../../context/AuthContext';
 import { socket } from '../../../lib/sockets';
+import { GameContext } from '../../game/context/GameContext';
 import { AuthView } from '../views/AuthView';
 
 export interface IFormInput {
@@ -24,7 +25,8 @@ export const AuthPage = () => {
         alert(data.description);
       } else {
         handleSetAuth(data.description);
-        history.replace('/soloq');
+        
+        history.replace('/queue');
       }
     });
   };

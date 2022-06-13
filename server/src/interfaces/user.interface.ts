@@ -8,3 +8,9 @@ export interface User {
 export interface ISocketId {
   [key: string]: string;
 }
+
+export interface IPlayer extends User {
+  canPlay: boolean;
+  color: string;
+  token: number;
+}

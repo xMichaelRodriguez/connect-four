@@ -6,6 +6,7 @@ import cors from 'cors';
 
 import queueEvents from './routes/queueRoute';
 import userEvents from './routes/usersRoute';
+import gameEvents from './routes/gameRoute';
 import { IRoom, ISendUniqueRoom, ISocketId, User } from './interfaces';
 
 // config
@@ -37,8 +38,15 @@ io.on('connection', (socket: Socket) => {
   // socket users
   userEvents(io, socket);
 
-  // colaRoute
+  // queue route
   queueEvents(io, socket);
+  socket.on('check-in', ({ userId }: { userId: number }) => {
+    socketIds[userId] = socket.id;
+  });
+
+  // game route
+  gameEvents(io, socket);
+
   socket.on('check-in', ({ userId }: { userId: number }) => {
     socketIds[userId] = socket.id;
   });
@@ -85,7 +93,6 @@ export function findRoomId(userId: string) {
   const roomId = Object.keys(rooms)[roomIndex];
   return roomId;
 }
-
 
 setInterval(() => {
   checkIfMatchmaking();
@@ -154,9 +161,15 @@ export function findUserIndexInRoom(userId: string, roomId: string) {
 }
 
 export function removeUserFromQueue(userId: string) {
-  return queue = queue.filter((user) => user.id !== userId);
+  return (queue = queue.filter((user) => user.id !== userId));
 }
 
 export function generateRoomId() {
   return Math.random().toString(36).substring(2, 15);
+
+}
+// actualiza el token de juego de el arreglo de usuarios y
+// en la room de la que se encuentra el usuario
+export function updateRoomDataUser() {
+
 }
