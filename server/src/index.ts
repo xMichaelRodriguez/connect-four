@@ -6,10 +6,12 @@ import cors from 'cors';
 
 import queueEvents from './routes/queueRoute';
 import userEvents from './routes/usersRoute';
+import gameEvents from './routes/gameRoute';
 import { IRoom, ISendUniqueRoom, ISocketId, User } from './interfaces';
 
 // config
 export let users: User[] = [];
+export let currentUser: number = 1;
 export let rooms: IRoom = {};
 export let socketIds: ISocketId = {};
 export let updateInterval = 3000;
@@ -37,8 +39,15 @@ io.on('connection', (socket: Socket) => {
   // socket users
   userEvents(io, socket);
 
-  // colaRoute
+  // queue route
   queueEvents(io, socket);
+  socket.on('check-in', ({ userId }: { userId: number }) => {
+    socketIds[userId] = socket.id;
+  });
+
+  // game route
+  gameEvents(io, socket);
+
   socket.on('check-in', ({ userId }: { userId: number }) => {
     socketIds[userId] = socket.id;
   });
@@ -50,13 +59,13 @@ io.on('connection', (socket: Socket) => {
   });
 });
 
-// utils
+// add users to users array
 export function addUser(username: string, socket: Socket) {
   const userToSave: User = {
     userName: username,
-    rank: Math.floor(Math.random() * 100),
+
     id: socket.id,
-    hasPlayed: false,
+    readyToPlay: false,
     room: '',
   };
   users.push(userToSave);
@@ -75,20 +84,18 @@ export function removeUserFromUser(id: string) {
  */
 export function findRoomId(userId: string) {
   const roomsValues = Object.values(rooms);
-  const singleLevelValues = roomsValues.map((singleRoomValue) => {
+  const singleValues = roomsValues.map((singleRoomValue) => {
     return singleRoomValue.map((singleObjectInsideRoom) => singleObjectInsideRoom.id);
   });
 
-  const roomIndex = singleLevelValues.findIndex((roomMembers) => {
+  const roomIndex = singleValues.findIndex((roomMembers) => {
     return roomMembers.includes(userId);
   });
   const roomId = Object.keys(rooms)[roomIndex];
+
   return roomId;
 }
 
-export function generateRoomId() {
-  return Math.random().toString(36).substring(2, 15);
-}
 setInterval(() => {
   checkIfMatchmaking();
 }, updateInterval);
@@ -123,7 +130,7 @@ const sendUniqueRoomAndAddUserRoomAndQuitUserQueue = ({ room, singleUser }: ISen
   sendUniqueRoom(socketIds[singleUser.id], 'matched');
   const newUserToRoom = {
     ...singleUser,
-    hasPlayed: false,
+    readyToPlay: false,
   };
 
   rooms[room].push(newUserToRoom);
@@ -135,7 +142,7 @@ const checkIfMatchMakingUsersQueue = (newRoomId: string) => {
     sendUniqueRoom(socketIds[singleUser.id], 'matched');
     const newUserToRoom = {
       ...singleUser,
-      hasPlayed: false,
+      readyToPlay: false,
     };
 
     rooms[newRoomId].push(newUserToRoom);
@@ -153,4 +160,23 @@ export function findUserIndexInRoom(userId: string, roomId: string) {
   const userIndex = rooms[roomId].findIndex((userInRoom) => userInRoom.id === userId);
 
   return userIndex;
+}
+
+export function removeUserFromQueue(userId: string) {
+  return (queue = queue.filter((user) => user.id !== userId));
+}
+
+export function generateRoomId() {
+  return Math.random().toString(36).substring(2, 15);
+
+}
+// actualiza el token de juego de el arreglo de usuarios y
+// en la room de la que se encuentra el usuario
+export function updateRoomDataUser() {
+
+}
+
+export function updateCurrentUser() {
+  const initialPlayer = Math.floor(Math.random() * 2) + 1;
+  return initialPlayer
 }

@@ -2,10 +2,16 @@ export interface User {
   userName: string;
   id: string;
   room: string;
-  rank: number;
-  hasPlayed: boolean;
+  readyToPlay: boolean;
+  initGame?: boolean;
 }
 
 export interface ISocketId {
   [key: string]: string;
+}
+
+export interface IPlayer extends User {
+  canPlay: boolean;
+  color: string;
+  token: number;
 }

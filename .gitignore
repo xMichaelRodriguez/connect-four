@@ -2,23 +2,44 @@ node_modules
 server/build
 
 # dependencies
-front-end/node_modules
-front-end/.pnp
-front-end/.pnp.js
+client/node_modules
+client/.pnp
+client/.pnp.js
 
 # testing
-front-end/coverage
+client/coverage
 
 # production
-front-end/build
+client/build
 
 # misc
-front-end/.DS_Store
-front-end/.env.local
-front-end/.env.development.local
-front-end/.env.test.local
-front-end/.env.production.local
+client/.DS_Store
+client/.env.local
+client/.env.development.local
+client/.env.test.local
+client/.env.production.local
 
+# Logs
+logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
