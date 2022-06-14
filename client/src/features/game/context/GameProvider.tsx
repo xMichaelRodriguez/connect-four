@@ -1,5 +1,5 @@
 import { ReactNode, useState } from 'react';
-import { getFirstEmptyRow, isTie, isWinner, togglePlayer } from '../../../lib/utilsGame';
+import { getFirstEmptyRow, isTie, isWinner } from '../../../lib/utilsGame';
 import { GameContext, IUserGame, Player } from './GameContext';
 
 import { IChangeBoard } from '../interface/index';
@@ -9,8 +9,8 @@ interface props {
 }
 
 interface ICurrentPlayer {
-  token: number;
   id?: string;
+  token: number;
 }
 const initialPlayer = Math.floor(Math.random() * 2) + 1;
 export const GameProvider = ({ children }: props) => {
@@ -36,10 +36,11 @@ export const GameProvider = ({ children }: props) => {
     return users;
   };
 
-  const handleChangeBoard = ({ colIndex, rowIndex, currentPlayer }: IChangeBoard) => {
+  const handleChangeBoard = ({ colIndex, rowIndex, currentPlayer, playerId }: IChangeBoard) => {
     const boardCopy = [...board];
     boardCopy[colIndex][rowIndex] = currentPlayer;
     setBoard(boardCopy);
+    socket.emit('game:update-board', { boardCopy, playerId });
   };
 
   // change payer en base a la columna que seleccione el usuario
@@ -61,9 +62,13 @@ export const GameProvider = ({ children }: props) => {
       return;
     }
 
-    await handleChangeBoard({ colIndex: firstEmptyRow, rowIndex, currentPlayer: currentPlayer.token });
+    await handleChangeBoard({
+      colIndex: firstEmptyRow,
+      rowIndex,
+      currentPlayer: currentPlayer.token,
+      playerId: currentPlayer.id,
+    });
 
-   
     const status: boolean = await checkGameStatus(currentPlayer.token);
     if (status) {
       console.log('Game Over');
@@ -78,8 +83,9 @@ export const GameProvider = ({ children }: props) => {
   };
 
   const checkGameStatus = (currentPlayer: number) => {
+    const winPlayer: Player | undefined = players.users.find((user) => user.token === currentPlayer);
     if (isWinner({ player: currentPlayer, board })) {
-      alert(`player ${currentPlayer} gana`);
+      if (!!winPlayer) alert(`player ${winPlayer.userName} wins`);
       return true;
     } else if (isTie({ board })) {
       alert('empate');
@@ -103,34 +109,27 @@ export const GameProvider = ({ children }: props) => {
     };
     setplayers(newPlayers);
   };
+
+  const updateBoard = async (board: number[][]) => {
+    setBoard(board);
+    const status: boolean = await checkGameStatus(currentPlayer);
+    const newCurrentPlayer: Player | undefined = players.users.find((user) => user.token === currentPlayer);
+    if (status && !!newCurrentPlayer) {
+      console.log('Game Over');
+    }
+  };
   const defaultValue = {
     board,
-    players,
-    isWin: false,
-    handleChangeBoard,
-    handlePutToken,
-    handlePassUsersToPlayer,
-    updatePlayers,
     changePlayer,
     color,
     currentPlayer,
+    handleChangeBoard,
+    handlePassUsersToPlayer,
+    handlePutToken,
+    isWin: false,
+    players,
+    updateBoard,
+    updatePlayers,
   };
-  return (
-    <GameContext.Provider
-      value={{
-        board,
-        players,
-        isWin: false,
-        handleChangeBoard,
-        handlePutToken,
-        handlePassUsersToPlayer,
-        updatePlayers,
-        changePlayer,
-        color,
-        currentPlayer,
-      }}
-    >
-      {children}
-    </GameContext.Provider>
-  );
+  return <GameContext.Provider value={defaultValue}>{children}</GameContext.Provider>;
 };

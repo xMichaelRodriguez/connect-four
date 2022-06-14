@@ -1,12 +1,15 @@
 export interface IPropsUserIndex {
-    rowIndex: number;
     currentPlayer: number
+    rowIndex: number;
 }
 
 export interface ICurrentPlayer {
-    token: number;
     id?: string;
+    token: number;
 }
 export interface IChangeBoard {
-    colIndex: number; rowIndex: number; currentPlayer: number;
+    currentPlayer: number;
+    rowIndex: number;
+    colIndex: number;
+    playerId?: string
 }

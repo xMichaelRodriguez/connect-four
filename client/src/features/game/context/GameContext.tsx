@@ -15,13 +15,14 @@ export interface IUserGame {
 export type IGameContextProps = {
   board: number[][];
   changePlayer: ({ currentUser }: { currentUser: number }) => void;
+  color: string;
   currentPlayer: number;
   handleChangeBoard: ({ colIndex, rowIndex, currentPlayer }: IChangeBoard) => void;
-  color: string;
   handlePassUsersToPlayer: (users: Player[]) => void;
   handlePutToken: ({ rowIndex, currentPlayer }: { rowIndex: number; currentPlayer: Player }) => void;
   isWin: boolean;
   players: IUserGame;
+  updateBoard: (board: [][]) => void;
   updatePlayers: (players: Player[]) => void;
 };
 

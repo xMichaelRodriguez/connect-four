@@ -57,4 +57,17 @@ export default (io: Server, socket: Socket) => {
             io.sockets.in(roomId).emit('game:new-color-User', newPlayers);
         }
     })
+
+    // board events
+    interface IBoardEvent {
+        playerId: string;
+        boardCopy: number[][];
+    }
+    socket.on('game:update-board', ({ boardCopy, playerId }: IBoardEvent) => {
+        const roomId = findRoomId(playerId);
+        if (!!roomId) {
+            io.sockets.in(roomId).emit('game:update-board', boardCopy);
+        }
+    })
+
 }
