@@ -4,6 +4,7 @@ import { ContainerGame } from '../components/ContainerGame';
 import { Board } from '../components/Board';
 import { HeadGame } from '../components/HeadGame';
 import { FooterGame } from '../components/FooterGame';
+import { FaceUpAnimateComponent } from '../../../components/FaceUpAnimateComponent';
 export interface IPropsState {
   board: number[][];
   color: string;
@@ -12,14 +13,14 @@ export interface IPropsState {
 }
 export const GamePage = () => {
   return (
-   
-      <VStack mb={3} minH={'90%'} minW={'90%'}>
+    <VStack mb={3} minH={'90%'} minW={'90%'}>
       <HeadGame />
+      <FaceUpAnimateComponent>
         <ContainerGame>
           <Board />
         </ContainerGame>
-        <FooterGame />
-      </VStack>
-  
+      </FaceUpAnimateComponent>
+      <FooterGame />
+    </VStack>
   );
 };

@@ -1,5 +1,7 @@
 import { Text } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import { FaceUpAnimateComponent } from '../../../components/FaceUpAnimateComponent';
 import { socket } from '../../../lib/sockets';
 
 export const TotalUsers = () => {
@@ -8,11 +10,16 @@ export const TotalUsers = () => {
     socket.on('updateUserActive', (data: number) => {
       setTotalUser(data);
     });
+    return () => {
+      socket.off('updateUserActive');
+    };
   }, [totalUser]);
 
   return (
-    <Text fontSize={'lg'} color='cyan '>
-      Total Users: {totalUser}
-    </Text>
+    <FaceUpAnimateComponent>
+      <Text fontSize={'lg'} color='cyan '>
+        Total Users: {totalUser}
+      </Text>
+    </FaceUpAnimateComponent>
   );
 };

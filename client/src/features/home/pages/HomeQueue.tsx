@@ -9,6 +9,7 @@ export const HomeQueue = () => {
   const history = useHistory();
   const { auth, handleSetAuth, handleSetUsers } = useContext(AuthContext);
   const { onOpen, onClose } = useContext(ModalContext);
+
   const [matchRejected, setMatchRejected] = useState('');
   const [matchFound, setMatchFound] = useState(false);
   const [matchAccepted, setMatchAccepted] = useState(false);
@@ -42,12 +43,22 @@ export const HomeQueue = () => {
     socket.on('in-room', (data: User) => {
       handleSetAuth(data);
     });
+    return () => {
+      socket.off('check-in');
+      socket.off('matched');
+      socket.off('in-room');
+      setMatchFound(false);
+    };
   }, []);
 
   useEffect(() => {
     socket.on('rejected-match', (data: string) => {
       setMatchRejected(data);
     });
+    return () => {
+      socket.off('rejected-match');
+      setMatchRejected('');
+    };
   }, []);
 
   useEffect(() => {
@@ -61,6 +72,10 @@ export const HomeQueue = () => {
       onClose();
       history.push('/lobby');
     });
+
+    return () => {
+      socket.off('match-accepted');
+    };
   }, []);
 
   return (

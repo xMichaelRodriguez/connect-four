@@ -1,4 +1,5 @@
 import { Button, ButtonGroup } from '@chakra-ui/react';
+import { FaceUpAnimateComponent } from '../../../components/FaceUpAnimateComponent';
 
 interface Props {}
 
@@ -10,15 +11,18 @@ export const FooterGame = (props: Props) => {
       colorScheme='teal'
       position={'absolute'}
       bottom={0}
-      
       top='85%'
     >
-      <Button size={'lg'} variant={'outline'} colorScheme='purple'>
-        Reset Game
-      </Button>
-      <Button size={'lg'} variant={'outline'} colorScheme='red'>
-        End Game
-      </Button>
+      <FaceUpAnimateComponent>
+        <Button size={'lg'} variant={'outline'} colorScheme='purple'>
+          Restart Game
+        </Button>
+      </FaceUpAnimateComponent>
+      <FaceUpAnimateComponent>
+        <Button size={'lg'} variant={'outline'} colorScheme='red'>
+          EndGame
+        </Button>
+      </FaceUpAnimateComponent>
     </ButtonGroup>
   );
 };

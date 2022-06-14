@@ -1,5 +1,5 @@
 import { Center, Container } from '@chakra-ui/react';
-import React, { ReactNode } from 'react';
+import  { ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;
@@ -24,7 +24,7 @@ export const ContainerComponent = ({ children }: Props) => {
         justifyContent={'center'}
         alignItems='center'
         flexDirection='column'
-      >
+        >
         {children}
       </Center>
     </Container>
