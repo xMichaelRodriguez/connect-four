@@ -15,7 +15,7 @@ interface Props {
   handelReject: () => void;
   handleMatchmaking: () => void;
   matchFound: boolean;
-  matchRejected: string;
+  matchRejected: boolean;
 }
 
 export const HomeView = ({
@@ -76,7 +76,7 @@ export const HomeView = ({
     );
   }
 
-  if (matchRejected !== '') {
+  if (matchRejected) {
     <ContainerComponent>
       <TotalUsers />
       <FaceUpAnimateComponent>

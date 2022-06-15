@@ -22,7 +22,7 @@ export const LobbyPage = () => {
   const handleEntryGame = () => {
     onOpen();
     socket.emit('game:ready', id);
-    socket.emit('current-user', id);
+    socket.emit('game:initial-current-user', id);
     const newPlayers: Player[] = users.map((user: User) => ({
       ...user,
       canPlay: false,

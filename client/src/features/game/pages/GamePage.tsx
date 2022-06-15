@@ -5,6 +5,8 @@ import { Board } from '../components/Board';
 import { HeadGame } from '../components/HeadGame';
 import { FooterGame } from '../components/FooterGame';
 import { FaceUpAnimateComponent } from '../../../components/FaceUpAnimateComponent';
+import { socket } from '../../../lib/sockets';
+import { useEffect } from 'react';
 export interface IPropsState {
   board: number[][];
   color: string;

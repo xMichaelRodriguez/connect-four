@@ -10,7 +10,7 @@ export const HomeQueue = () => {
   const { auth, handleSetAuth, handleSetUsers } = useContext(AuthContext);
   const { onOpen, onClose } = useContext(ModalContext);
 
-  const [matchRejected, setMatchRejected] = useState('');
+  const [matchRejected, setMatchRejected] = useState(false);
   const [matchFound, setMatchFound] = useState(false);
   const [matchAccepted, setMatchAccepted] = useState(false);
   const handleMatchmaking = () => {
@@ -52,12 +52,13 @@ export const HomeQueue = () => {
   }, []);
 
   useEffect(() => {
-    socket.on('rejected-match', (data: string) => {
+    socket.on('match-rejected', (data: boolean) => {
       setMatchRejected(data);
+      console.log(data);
     });
     return () => {
-      socket.off('rejected-match');
-      setMatchRejected('');
+      socket.off('match-rejected');
+      setMatchRejected(false);
     };
   }, []);
 

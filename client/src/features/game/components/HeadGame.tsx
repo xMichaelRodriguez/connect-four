@@ -12,13 +12,15 @@ export const HeadGame = () => {
   const { players, updatePlayers, color, changePlayer } = useContext(GameContext);
 
   useEffect(() => {
-    socket.on('current-user', (currentUser) => {
+  
+    socket.on('game:initial-current-user', (currentUser) => {
+      console.log({ currentUser });
       changePlayer({ currentUser });
     });
     return () => {
-      socket.off('current-user');
+      socket.off('game:initial-current-user');
     };
-  }, []);
+  }, [color]);
 
   useEffect(() => {
     socket.on('game:update-active-user', (data: number) => {

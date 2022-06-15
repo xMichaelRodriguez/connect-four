@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { Server, Socket } from 'socket.io';
 import http from 'http';
 import dotenv from 'dotenv';
@@ -14,25 +14,32 @@ export let users: User[] = [];
 export let currentUser: number = 1;
 export let rooms: IRoom = {};
 export let socketIds: ISocketId = {};
-export let updateInterval = 3000;
+export let updateInterval = 10000;
 export let minRoomSize = 2;
 
 export let queue: User[] = [];
 export const app = express();
-app.use(cors());
 export const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  },
-});
 dotenv.config();
 app.set('port', process.env.PORT || 3000);
+const whiteList = ['http://localhost:3000', 'https://connect-4-client.netlify.app']
+
 
 // middlewares
 app.use(express.json({}));
 app.use(express.urlencoded({ extended: false }));
+app.use(cors());
+const io = new Server(server, {
+  cors: {
+    origin: whiteList,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  },
+});
+
+app.get('/', (_: Request, res: Response) => {
+  return res.send('Hello World');
+});
+
 
 //socket.io
 io.on('connection', (socket: Socket) => {
@@ -54,8 +61,8 @@ io.on('connection', (socket: Socket) => {
 
   socket.on('disconnect', () => {
     removeUserFromUser(socket.id);
-    rooms = {};
-    queue = [];
+    removeUserFromRoom(socket.id);
+    removeUserFromQueue(socket.id);
   });
 });
 
@@ -73,10 +80,8 @@ export function addUser(username: string, socket: Socket) {
   return { userToSave };
 }
 
-export function removeUserFromUser(id: string) {
-  users = users.filter((user) => user.id !== id);
-  console.log(`bye ${users.length}`);
-}
+
+
 /**
  *
  * @param userId ->id of user to find
@@ -107,6 +112,7 @@ export function checkIfMatchmaking() {
   Object.entries(rooms).forEach((room) => {
     if (room[1].length < minRoomSize) {
       findUserInRoom(room[0], newRoomId);
+
     } else {
       checkIfMatchMakingUsersQueue(newRoomId);
     }
@@ -162,9 +168,7 @@ export function findUserIndexInRoom(userId: string, roomId: string) {
   return userIndex;
 }
 
-export function removeUserFromQueue(userId: string) {
-  return (queue = queue.filter((user) => user.id !== userId));
-}
+
 
 export function generateRoomId() {
   return Math.random().toString(36).substring(2, 15);
@@ -179,4 +183,20 @@ export function updateRoomDataUser() {
 export function updateCurrentUser() {
   const initialPlayer = Math.floor(Math.random() * 2) + 1;
   return initialPlayer
+}
+export function removeUserFromQueue(userId: string) {
+  return (queue = queue.filter((user) => user.id !== userId));
+}
+
+export function removeUserFromUser(id: string) {
+  users = users.filter((user) => user.id !== id);
+  console.log(`bye ${users.length}`);
+}
+
+function removeUserFromRoom(id: string) {
+  const user = users.find((user) => user.id === id);
+  if (user) {
+    const room = user.room;
+    rooms[room] = rooms[room].filter((user) => user.id !== id);
+  }
 }
