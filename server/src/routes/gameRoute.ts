@@ -34,18 +34,17 @@ export default (io: Server, socket: Socket) => {
         io.sockets.to(myUser.id).emit('game:init', myUser);
     });
 
-    socket.on('current-user', (userId: string) => {
+    socket.on('game:initial-current-user', (userId: string) => {
         const roomId = findRoomId(userId);
         if (!!roomId) {
             const currentUser = updateCurrentUser()
             console.log({ currentUser })
-            io.sockets.in(roomId).emit('current-user', currentUser);
+            io.sockets.in(roomId).emit('game:initial-current-user', currentUser);
         }
     })
     socket.on('game:update-active-user', ({ userId, token }: { userId: string, token: number }) => {
         const newToken = token === 1 ? 2 : 1;
         const roomId = findRoomId(userId);
-        console.log({ newToken })
         io.sockets.in(roomId).emit('game:update-active-user', newToken);
     })
 
@@ -67,6 +66,13 @@ export default (io: Server, socket: Socket) => {
         const roomId = findRoomId(playerId);
         if (!!roomId) {
             io.sockets.in(roomId).emit('game:update-board', boardCopy);
+        }
+    });
+
+    socket.on('game:win',(userId:string)=>{
+        const roomId = findRoomId(userId);
+        if (!!roomId) {
+            io.sockets.in(roomId).emit('game:win', userId);
         }
     })
 

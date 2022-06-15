@@ -10,6 +10,7 @@ export const Board = () => {
   useEffect(() => {
     socket.on('game:update-board', (newBoard) => {
       updateBoard(newBoard);
+    
     });
   }, []);
   return (

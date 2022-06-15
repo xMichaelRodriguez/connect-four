@@ -45,6 +45,7 @@ export const GameProvider = ({ children }: props) => {
 
   // change payer en base a la columna que seleccione el usuario
   const changePlayer = ({ currentUser }: { currentUser: number }) => {
+    console.log({ currentUser });
     setCurrentPlayer(currentUser);
     handleChangeColor(currentUser);
   };
@@ -68,24 +69,13 @@ export const GameProvider = ({ children }: props) => {
       currentPlayer: currentPlayer.token,
       playerId: currentPlayer.id,
     });
-
-    const status: boolean = await checkGameStatus(currentPlayer.token);
-    if (status) {
-      console.log('Game Over');
-    }
-
-    // else {
-    //   const resp: boolean = askUserForAnotherMatch();
-    //   if (resp) {
-    //     console.log('reset game');
-    //   }
-    // }
   };
 
   const checkGameStatus = (currentPlayer: number) => {
     const winPlayer: Player | undefined = players.users.find((user) => user.token === currentPlayer);
     if (isWinner({ player: currentPlayer, board })) {
       if (!!winPlayer) alert(`player ${winPlayer.userName} wins`);
+
       return true;
     } else if (isTie({ board })) {
       alert('empate');
@@ -115,7 +105,7 @@ export const GameProvider = ({ children }: props) => {
     const status: boolean = await checkGameStatus(currentPlayer);
     const newCurrentPlayer: Player | undefined = players.users.find((user) => user.token === currentPlayer);
     if (status && !!newCurrentPlayer) {
-      console.log('Game Over');
+      alert('game over');
     }
   };
   const defaultValue = {
@@ -126,7 +116,7 @@ export const GameProvider = ({ children }: props) => {
     handleChangeBoard,
     handlePassUsersToPlayer,
     handlePutToken,
-    isWin: false,
+
     players,
     updateBoard,
     updatePlayers,

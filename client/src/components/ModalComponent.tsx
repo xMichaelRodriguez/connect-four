@@ -1,8 +1,6 @@
 import {
-  Button,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
@@ -16,12 +14,7 @@ interface Props {
   modalTitle?: string;
 }
 
-export const ModalComponent = ({
-  children,
-  onClose,
-  isOpen,
-  modalTitle = 'Matchmaking',
-}: Props) => (
+export const ModalComponent = ({ children, onClose, isOpen, modalTitle = 'Matchmaking' }: Props) => (
   <Modal
     closeOnOverlayClick={false}
     isOpen={isOpen}
@@ -30,13 +23,9 @@ export const ModalComponent = ({
     motionPreset='slideInBottom'
   >
     <ModalOverlay />
-    <ModalContent
-      maxH={'250px'}
-      color={'white'}
-      bgGradient='linear(to-b,  rgb(2, 22, 39), rgb(1, 22, 39))'
-    >
+    <ModalContent maxH={'250px'} color={'white'} bgGradient='linear(to-b,  rgb(2, 22, 39), rgb(1, 22, 39))'>
       <ModalHeader>{modalTitle}</ModalHeader>
-      <ModalCloseButton onClick={onClose} />
+
       <ModalBody display={'flex'} justifyContent={'center'} py={10}>
         {children}
       </ModalBody>

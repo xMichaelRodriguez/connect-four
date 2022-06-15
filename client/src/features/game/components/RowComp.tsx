@@ -13,18 +13,22 @@ export const RowComp = ({ colIndex, rowIndex }: IProps) => {
   const { board, handlePutToken, players, currentPlayer } = useContext(GameContext);
   const { auth } = useContext(AuthContext);
 
-
+  const [counter, setCounter] = useState(0);
   const [state, setstate] = useState('');
   const [currentPlayerNotActive, setCurrentPlayerNotActive] = useState(false);
-  
-  
+
   const handleClick = async () => {
-    if (!currentPlayerNotActive) {
-      const isValidPlayer: Player | undefined = players.users.find(
-        (user) => user.id === auth.id && currentPlayer === user.token
-      );
-      if (!!isValidPlayer) {
-        handlePutToken({ rowIndex, currentPlayer: isValidPlayer });
+    setCounter(counter + 1);
+
+    if (counter === 0) {
+      if (!currentPlayerNotActive) {
+        const isValidPlayer: Player | undefined = players.users.find(
+          (user) => user.id === auth.id && currentPlayer === user.token
+        );
+        if (!!isValidPlayer) {
+          handlePutToken({ rowIndex, currentPlayer: isValidPlayer });
+          setCounter(0);
+        }
       }
     }
   };

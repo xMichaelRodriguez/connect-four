@@ -3,6 +3,7 @@ import { Button, Center, FormControl, FormHelperText, Heading, Input } from '@ch
 import { FormState, SubmitHandler, UseFormHandleSubmit, UseFormRegister } from 'react-hook-form';
 import { IFormInput } from '../pages/AuthPage';
 import { ContainerComponent } from '../../../components/ContainerComponent';
+import { FaceUpAnimateComponent } from '../../../components/FaceUpAnimateComponent';
 
 interface IProps {
   handleSubmit: UseFormHandleSubmit<IFormInput>;
@@ -13,6 +14,7 @@ interface IProps {
 export const AuthView = ({ formState: { errors }, handleSubmit, onSubmit, register }: IProps) => {
   return (
     <ContainerComponent>
+      <FaceUpAnimateComponent>
       <Center>
         <Heading color={'teal'}>Register </Heading>
       </Center>
@@ -41,6 +43,7 @@ export const AuthView = ({ formState: { errors }, handleSubmit, onSubmit, regist
           Join
         </Button>
       </form>
+      </FaceUpAnimateComponent>
     </ContainerComponent>
   );
 };

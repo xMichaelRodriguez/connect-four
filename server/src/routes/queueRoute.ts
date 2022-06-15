@@ -9,6 +9,8 @@ export default (io: Server, socket: Socket) => {
   socket.on('matchmaking', (data: IResponse) => {
     const userToQueue = users.filter((singleUser) => singleUser.id === data.userId)[0];
     queue.push({ ...userToQueue });
+
+
   });
 
   socket.on('acepted-matched', ({ id }: User) => {
@@ -38,12 +40,12 @@ export default (io: Server, socket: Socket) => {
 
     const myUser = users.filter((user) => user.id === id)[0];
     io.sockets.to(myUser.id).emit('in-room', myUser);
-   
+
   });
 
   socket.on('match-rejected', ({ id }: User) => {
-    console.log({ queue })
+    console.log('match-rejected');
+    io.sockets.in(findRoomId(id)).emit('match-rejected', true);
     removeUserFromQueue(id);
-    console.log({ queue })
   });
 };
