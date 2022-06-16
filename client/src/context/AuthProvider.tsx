@@ -1,26 +1,33 @@
-import React, { ReactNode, useState } from 'react';
-import { User, AuthContext } from './AuthContext';
+import  { ReactNode, useReducer } from 'react';
+import { IAuth, IAuthState } from '../interfaces';
+import { AuthContext } from './AuthContext';
+import { authReducer } from './reducers/authReducer';
 interface props {
   children: ReactNode;
 }
 
+export const INITIAL_STATE: IAuthState = {
+  auth: {} as IAuth,
+  players: [],
+};
+
 export const AuthProvider = ({ children }: props) => {
-  const [state, setstate] = useState<User>({} as User);
-  const [roomUsers, setRoomUsers] = useState<User[]>([]);
-  const handleAuth = (user: User) => {
-    setstate(user);
+  const [authState, dispatch] = useReducer(authReducer, INITIAL_STATE);
+
+  const setLogin = (user: IAuth) => {
+    console.log(user);
+    dispatch({ type: 'AUTH_LOGIN', payload: user });
   };
-  const handleSetUsers = (users: User[]) => {
-    setRoomUsers([...users]);
+  const setPlayers = (players: IAuth[]) => {
+    dispatch({ type: 'SET_PLAYERS', payload: players });
   };
 
   return (
     <AuthContext.Provider
       value={{
-        auth: state,
-        handleSetAuth: handleAuth,
-        users: roomUsers,
-        handleSetUsers,
+        authState,
+        setLogin,
+        setPlayers,
       }}
     >
       {children}

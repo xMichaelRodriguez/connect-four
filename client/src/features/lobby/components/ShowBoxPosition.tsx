@@ -1,15 +1,20 @@
-import React, { useContext } from 'react';
+// interfaces
+import { IAuth } from '../../../interfaces';
 
-import { AuthContext, User } from '../../../context/AuthContext';
+// hooks
+import { useAuth } from '../../../hook/useAuth';
+
+// my components
 import { UserBoxLeft } from './UserBoxLeft';
 import { UserBoxRight } from './UserBoxRight';
 
 interface Props {
-  user: User;
+  user: IAuth;
 }
 
 export const ShowBoxPosition = ({ user }: Props) => {
-  const { auth } = useContext(AuthContext);
+  const { authState } = useAuth();
+  const { auth } = authState;
 
   if (user.id === auth.id) {
     return <UserBoxLeft user={user} />;
