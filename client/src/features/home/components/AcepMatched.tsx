@@ -1,7 +1,10 @@
-import { Button, Heading, Stack, VStack } from '@chakra-ui/react';
-import React, { useContext } from 'react';
-import { FaceUpAnimateComponent } from '../../../components/FaceUpAnimateComponent';
-import { ModalContext } from '../../../context/ModalContext';
+import { Button, Heading, Stack, VStack } from "@chakra-ui/react";
+
+//hooks
+import { useMyModal } from "../../../hook/useMyModal";
+
+//my utils
+import { FaceUpAnimateComponent } from "../../../components/FaceUpAnimateComponent";
 
 interface Props {
   onAcepted: () => void;
@@ -9,7 +12,7 @@ interface Props {
 }
 
 export const AcepMatched = ({ onAcepted, onRejected }: Props) => {
-  const { onClose } = useContext(ModalContext);
+  const { onClose } = useMyModal();
 
   const handleRejectMatch = () => {
     onRejected();
@@ -19,11 +22,20 @@ export const AcepMatched = ({ onAcepted, onRejected }: Props) => {
     <VStack>
       <FaceUpAnimateComponent>
         <Heading my={3}> New Match Found</Heading>
-        <Stack spacing={4} direction='row' align='center' justifyContent={'space-around'}>
-          <Button colorScheme='teal' onClick={onAcepted}>
+        <Stack
+          spacing={4}
+          direction="row"
+          align="center"
+          justifyContent={"space-around"}
+        >
+          <Button colorScheme="teal" onClick={onAcepted}>
             Accept
           </Button>
-          <Button colorScheme='teal' variant='outline' onClick={handleRejectMatch}>
+          <Button
+            colorScheme="teal"
+            variant="outline"
+            onClick={handleRejectMatch}
+          >
             Reject
           </Button>
         </Stack>

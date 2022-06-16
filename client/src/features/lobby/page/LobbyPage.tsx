@@ -1,40 +1,45 @@
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Button, Flex, Stack } from '@chakra-ui/react';
+import { useHistory } from 'react-router-dom';
 
-import { IAuth } from '../../../interfaces';
-import { useMyModal } from '../../../hook/useMyModal';
+// custom hooks
 import { useAuth } from '../../../hook/useAuth';
+import { useGame } from '../../game/hooks/useGame';
+import { useMyModal } from '../../../hook/useMyModal';
 
+// interfaces
+import { IAuth } from '../../../interfaces';
+import { IGame } from '../../game/interface';
+
+// utils and components
 import { ContainerComponent } from '../../../components/ContainerComponent';
 import { ShowBoxPosition } from '../components/ShowBoxPosition';
-import { useHistory } from 'react-router-dom';
-import { GameContext, Player } from '../../game/context/GameContext';
 import { socket } from '../../../lib/sockets';
 import { FaceUpAnimateComponent } from '../../../components/FaceUpAnimateComponent';
+
 export const LobbyPage = () => {
-  const { handlePassUsersToPlayer, updatePlayers } = useContext(GameContext);
-  const { isOpen, onClose, onOpen } = useMyModal();
+  const { onClose } = useMyModal();
+  const { handlePassUsersToPlayer, updatePlayers } = useGame();
   const { authState } = useAuth();
   const { auth, players } = authState;
 
   const history = useHistory();
 
   const handleEntryGame = () => {
-    onOpen();
-    socket.emit('game:ready', auth.id);
-    socket.emit('game:initial-current-user', auth.id);
-    const newPlayers: Player[] = players.map((user: IAuth) => ({
+    const newPlayers: IGame[] = players.map((user: IAuth) => ({
       ...user,
-      canPlay: false,
+
       color: '',
       token: 0,
     }));
-
     handlePassUsersToPlayer(newPlayers);
+    
+    socket.emit('game:initial-current-user', auth.id);
+    socket.emit('game:ready', auth.id);
   };
 
   useEffect(() => {
-    socket.on('game:updated-token-users', (data: Player[]) => {
+    socket.on('game:updated-token-users', (data: IGame[]) => {
       updatePlayers(data);
     });
   }, [updatePlayers]);
@@ -42,7 +47,6 @@ export const LobbyPage = () => {
   useEffect(() => {
     socket.on('game:init', (data) => {
       if (data) {
-        onClose();
         history.push('/game');
       }
     });

@@ -1,9 +1,11 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useReducer, useState } from 'react';
 import { getFirstEmptyRow, isTie, isWinner } from '../../../lib/utilsGame';
-import { GameContext, IUserGame, Player } from './GameContext';
+import { GameContext } from './GameContext';
 
-import { IChangeBoard } from '../interface/index';
+import { IChangeBoard, IGame, IGameState } from '../interface/index';
 import { socket } from '../../../lib/sockets';
+import { gameReducer, typesGame } from '../context/reducers/gameReducer';
+import { useAuth } from '../../../hook/useAuth';
 interface props {
   children: ReactNode;
 }
@@ -13,45 +15,55 @@ interface ICurrentPlayer {
   token: number;
 }
 const initialPlayer = Math.floor(Math.random() * 2) + 1;
-export const GameProvider = ({ children }: props) => {
-  const [currentPlayer, setCurrentPlayer] = useState<number>(initialPlayer);
-  const [color, setColor] = useState('');
 
-  const [players, setplayers] = useState<IUserGame>({ isLose: false, isWin: false, users: [] });
-  const [board, setBoard] = useState<number[][]>(
-    Array(6)
-      .fill(0)
-      .map(() => Array(7).fill(null))
-  );
+const INITIAL_STATE: IGameState = {
+  color: 'red',
+  board: Array(6)
+    .fill(0)
+    .map(() => Array(7).fill(null)),
+  playerActive: initialPlayer,
+  players: [],
+};
+
+export const GameProvider = ({ children }: props) => {
+  const [gameState, dispatch] = useReducer(gameReducer, INITIAL_STATE);
+  const { players, playerActive, board } = gameState;
+  const { authState } = useAuth();
+  const { auth } = authState;
+  const [currentPlayer, setCurrentPlayer] = useState<number>(initialPlayer);
+  // const [color, setColor] = useState('');
 
   const handleChangeColor = (currentUser: number) => {
     const newColor = currentUser === 1 ? 'red' : 'blue';
-    setColor(newColor);
+    dispatch({ type: typesGame.CHANGE_COLOR, payload: newColor });
   };
 
-  const setTokenUserRamdon = (users: Player[]) => {
-    users[0].token = currentPlayer;
-    users[1].token = users[0].token === 1 ? (users[1].token = 2) : (users[1].token = 1);
-    socket.emit('game:update-token-users', users);
-    return users;
+  // set ramdon token to players
+  const setTokenUserRamdon = (players: IGame[]): IGame[] => {
+    players[0].token = playerActive;
+    players[1].token = players[1].token === 1 ? (players[1].token = 2) : (players[1].token = 2);
+    const newPlayersTokens = players;
+    socket.emit('game:update-token-players', newPlayersTokens);
+
+    return newPlayersTokens;
   };
 
+  // change board in current screen and emit update board to adversary
   const handleChangeBoard = ({ colIndex, rowIndex, currentPlayer, playerId }: IChangeBoard) => {
     const boardCopy = [...board];
     boardCopy[colIndex][rowIndex] = currentPlayer;
-    setBoard(boardCopy);
+    dispatch({ type: typesGame.UPDATE_BOARD, payload: boardCopy });
     socket.emit('game:update-board', { boardCopy, playerId });
   };
 
   // change payer en base a la columna que seleccione el usuario
   const changePlayer = ({ currentUser }: { currentUser: number }) => {
-    console.log({ currentUser });
     setCurrentPlayer(currentUser);
     handleChangeColor(currentUser);
   };
 
   // pone la ficha en el tablero
-  const handlePutToken = async ({ rowIndex, currentPlayer }: { rowIndex: number; currentPlayer: Player }) => {
+  const handlePutToken = async ({ rowIndex, currentPlayer }: { rowIndex: number; currentPlayer: IGame }) => {
     socket.emit('game:update-active-user', {
       userId: currentPlayer.id,
       token: currentPlayer.token,
@@ -72,7 +84,7 @@ export const GameProvider = ({ children }: props) => {
   };
 
   const checkGameStatus = (currentPlayer: number) => {
-    const winPlayer: Player | undefined = players.users.find((user) => user.token === currentPlayer);
+    const winPlayer: IGame | undefined = players.find((user: IGame) => user.token === currentPlayer);
     if (isWinner({ player: currentPlayer, board })) {
       if (!!winPlayer) alert(`player ${winPlayer.userName} wins`);
 
@@ -83,41 +95,36 @@ export const GameProvider = ({ children }: props) => {
     }
     return false;
   };
+
   // pasa los usuarios en el AuthContext a el GameContext
-  const handlePassUsersToPlayer = (users: Player[]) => {
-    const newUsers: Player[] = setTokenUserRamdon(users);
-    const newPlayers = {
-      ...players,
-      users: newUsers,
-    };
-    setplayers(newPlayers);
-  };
-  const updatePlayers = (newPlayersUpdate: Player[]) => {
-    const newPlayers = {
-      ...players,
-      users: newPlayersUpdate,
-    };
-    setplayers(newPlayers);
+  const handlePassUsersToPlayer = (players: IGame[]) => {
+    const newPlayers: IGame[] = setTokenUserRamdon(players);
+
+    dispatch({ type: typesGame.PLAYERS_IN_GAME, payload: [...newPlayers] });
+    socket.emit('');
   };
 
-  const updateBoard = async (board: number[][]) => {
-    setBoard(board);
-    const status: boolean = await checkGameStatus(currentPlayer);
-    const newCurrentPlayer: Player | undefined = players.users.find((user) => user.token === currentPlayer);
-    if (status && !!newCurrentPlayer) {
-      alert('game over');
-    }
+  // update player array
+  const updatePlayers = (newPlayersUpdate: IGame[]) => {
+    dispatch({ type: typesGame.PLAYERS_IN_GAME, payload: newPlayersUpdate });
   };
+
+  // update board
+  const updateBoard = async (board: number[][]) => {
+    dispatch({ type: typesGame.UPDATE_BOARD, payload: board });
+    // const status: boolean = await checkGameStatus(currentPlayer);
+    // const newCurrentPlayer: IGame | undefined = players.find((user) => user.token === currentPlayer);
+    // if (status && !!newCurrentPlayer) {
+    //   alert('game over');
+    // }
+  };
+
   const defaultValue = {
-    board,
     changePlayer,
-    color,
-    currentPlayer,
     handleChangeBoard,
     handlePassUsersToPlayer,
     handlePutToken,
-
-    players,
+    gameState,
     updateBoard,
     updatePlayers,
   };

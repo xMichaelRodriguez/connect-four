@@ -1,35 +1,18 @@
 import { createContext } from 'react';
-import { User } from '../../../context/AuthContext';
-import { IChangeBoard, IPropsUserIndex } from '../interface';
+import { IChangeBoard, IGame, IGameState } from '../interface';
 
-export interface Player extends User {
-  canPlay: boolean;
-  token: number;
-  color: string;
-}
-export interface IUserGame {
-  isLose: boolean;
-  isWin: boolean;
-  users: Player[];
-}
-export type IGameContextProps = {
-  board: number[][];
+export interface IGameContextProps {
+  gameState: IGameState;
+
   changePlayer: ({ currentUser }: { currentUser: number }) => void;
-  color: string;
-  currentPlayer: number;
   handleChangeBoard: ({ colIndex, rowIndex, currentPlayer }: IChangeBoard) => void;
-  handlePassUsersToPlayer: (users: Player[]) => void;
-  handlePutToken: ({ rowIndex, currentPlayer }: { rowIndex: number; currentPlayer: Player }) => void;
 
-  players: IUserGame;
+  handlePassUsersToPlayer: (users: IGame[]) => void;
+
+  handlePutToken: ({ rowIndex, currentPlayer }: { rowIndex: number; currentPlayer: IGame }) => void;
+
   updateBoard: (board: [][]) => void;
-  updatePlayers: (players: Player[]) => void;
-};
-
-// export interface IGameContextProps {
-//   board: number[][];
-//   color: string;
-//   currentPlayer: number;
-//   isWin: boolean;
+  updatePlayers: (players: IGame[]) => void;
+}
 
 export const GameContext = createContext<IGameContextProps>({} as IGameContextProps);

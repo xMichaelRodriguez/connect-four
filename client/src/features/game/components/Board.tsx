@@ -2,15 +2,16 @@ import { Table, TableContainer, Tbody } from '@chakra-ui/react';
 import { useContext, useEffect } from 'react';
 import { socket } from '../../../lib/sockets';
 import { GameContext } from '../context/GameContext';
+import { useGame } from '../hooks/useGame';
 import { ColComp } from './ColComp';
 
 export const Board = () => {
-  const { board, updateBoard } = useContext(GameContext);
+  const { gameState, updateBoard } = useGame();
+  const { board } = gameState;
 
   useEffect(() => {
     socket.on('game:update-board', (newBoard) => {
       updateBoard(newBoard);
-    
     });
   }, []);
   return (

@@ -1,20 +1,19 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Box, Flex, HStack, Tag, TagLabel, TagRightIcon, Text, VStack } from '@chakra-ui/react';
 import { AiOutlineNodeIndex } from 'react-icons/ai';
 
 import { UserPointsLeft } from '../components/UserPointsLeft';
 import { UserPointsRight } from '../components/UserPointsRight';
-import { GameContext, Player } from '../context/GameContext';
 import { socket } from '../../../lib/sockets';
 import { FaceUpAnimateComponent } from '../../../components/FaceUpAnimateComponent';
+import { useGame } from '../hooks/useGame';
+import { IGame } from '../interface';
 
 export const HeadGame = () => {
-  const { players, updatePlayers, color, changePlayer } = useContext(GameContext);
-
+  const { gameState, updatePlayers, changePlayer } = useGame();
+  const { color, players } = gameState;
   useEffect(() => {
-  
     socket.on('game:initial-current-user', (currentUser) => {
-      console.log({ currentUser });
       changePlayer({ currentUser });
     });
     return () => {
@@ -24,7 +23,7 @@ export const HeadGame = () => {
 
   useEffect(() => {
     socket.on('game:update-active-user', (data: number) => {
-      console.log({ data });
+     
       changePlayer({ currentUser: data });
     });
     return () => {
@@ -33,7 +32,7 @@ export const HeadGame = () => {
   }, []);
 
   useEffect(() => {
-    if (Object.values(players.users).length > 0) socket.emit('game:colorUser', players.users);
+    if (Object.values(players).length > 0) socket.emit('game:colorUser', players);
 
     return () => {
       socket.off('game:colorUser');
@@ -41,7 +40,7 @@ export const HeadGame = () => {
   }, []);
 
   useEffect(() => {
-    socket.on('game:new-color-User', (users: Player[]) => {
+    socket.on('game:new-color-User', (users: IGame[]) => {
       updatePlayers(users);
     });
     return () => {

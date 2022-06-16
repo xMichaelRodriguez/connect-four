@@ -1,4 +1,4 @@
-import  { ReactNode, useReducer } from 'react';
+import { ReactNode, useReducer } from 'react';
 import { IAuth, IAuthState } from '../interfaces';
 import { AuthContext } from './AuthContext';
 import { authReducer } from './reducers/authReducer';
@@ -15,7 +15,6 @@ export const AuthProvider = ({ children }: props) => {
   const [authState, dispatch] = useReducer(authReducer, INITIAL_STATE);
 
   const setLogin = (user: IAuth) => {
-    console.log(user);
     dispatch({ type: 'AUTH_LOGIN', payload: user });
   };
   const setPlayers = (players: IAuth[]) => {

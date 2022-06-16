@@ -1,12 +1,13 @@
-import React from 'react';
-import { Divider, Icon, Tag, TagLabel, Text } from '@chakra-ui/react';
+import {  Icon, Tag, TagLabel, Text } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { FaUserAlt } from 'react-icons/fa';
 
+import { IGame } from '../../game/interface';
 
-import { User } from '../../../context/AuthContext';
+
+
 interface Props {
-  user: User;
+  user: IGame;
 }
 // FaUserAlt
 export const UserBoxRight = ({ user }: Props) => {

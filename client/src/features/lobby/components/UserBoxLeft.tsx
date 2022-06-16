@@ -1,11 +1,10 @@
-import React from 'react';
-import { Divider, Icon, Tag, TagLabel, Text } from '@chakra-ui/react';
+import { Icon, Tag, TagLabel, Text } from '@chakra-ui/react';
 import { FaUserAlt } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+import { IGame } from '../../game/interface';
 
-import { User } from '../../../context/AuthContext';
 interface Props {
-  user: User;
+  user: IGame;
 }
 
 export const UserBoxLeft = ({ user }: Props) => {
@@ -24,13 +23,13 @@ export const UserBoxLeft = ({ user }: Props) => {
         },
       }}
     >
-      <Tag size={'lg'}  variant='outline' colorScheme='teal' h={'100px'} w={'110px'}>
-        <TagLabel fontSize={'md'} >
-          <Text  noOfLines={[1, 2, 3]} my={1}>
+      <Tag size={'lg'} variant='outline' colorScheme='teal' h={'100px'} w={'110px'}>
+        <TagLabel fontSize={'md'} textAlign='center'>
+          <Text noOfLines={[1, 2, 3]} my={1} textAlign='center'>
             {user.userName}
           </Text>
 
-          <Icon as={FaUserAlt}  />
+          <Icon as={FaUserAlt} />
         </TagLabel>
       </Tag>
     </motion.div>

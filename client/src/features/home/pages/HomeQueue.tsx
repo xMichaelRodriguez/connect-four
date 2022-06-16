@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
+//hooks
 import { useAuth } from '../../../hook/useAuth';
 import { useMyModal } from '../../../hook/useMyModal';
+
+//my utils
 import { IAuth } from '../../../interfaces';
 import { socket } from '../../../lib/sockets';
 import { HomeView } from '../views/HomeView';
@@ -34,6 +37,7 @@ export const HomeQueue = () => {
   };
   const handleRejected = () => {
     socket.emit('match-rejected', auth.id);
+    setMatchFound(false);
   };
 
   useEffect(() => {
@@ -73,6 +77,7 @@ export const HomeQueue = () => {
       }));
       setPlayers(newUsers);
       onClose();
+     
       history.push('/lobby');
     });
 
