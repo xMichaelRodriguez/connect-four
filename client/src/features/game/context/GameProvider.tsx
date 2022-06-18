@@ -1,8 +1,11 @@
 import { ReactNode, useReducer } from 'react';
 import { GameContext } from './GameContext';
 import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 // interfaces
 import { IChangeBoard, IGame, IGameState, IStateWin } from '../interface/index';
+
+import { useHistory } from 'react-router-dom';
 
 // utils
 import { getFirstEmptyRow, isTie, isWinner } from '../../../lib/utilsGame';
@@ -94,10 +97,25 @@ export const GameProvider = ({ children }: props) => {
     }
 
     if (winPlayer.isWin) {
-      Swal.fire({ title: 'Win!', text: winPlayer.description, icon: 'success', confirmButtonText: 'cool' });
+      Swal.fire({
+        title: 'Win!',
+        text: winPlayer.description,
+        icon: 'success',
+        showCancelButton: true,
+        confirmButtonText: 'Play Again',
+        cancelButtonText: 'EndGame',
+      }).then((resp) => {
+        if (resp.isConfirmed) {
+          console.log('REINICIO  PARTIDA');
+        }
+
+        console.log('SALIO DEL JUEGO');
+      });
       socket.emit('game:win', { description: winPlayer.description, userId: players[0].id, playerActive });
     }
   };
+
+  // checker function
 
   const checkGameStatus = (currentPlayer: number): IStateWin => {
     const winPlayer: IGame | undefined = players.find((user: IGame) => user.token === currentPlayer);

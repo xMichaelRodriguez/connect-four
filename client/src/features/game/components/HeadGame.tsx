@@ -8,10 +8,12 @@ import { socket } from '../../../lib/sockets';
 import { FaceUpAnimateComponent } from '../../../components/FaceUpAnimateComponent';
 import { useGame } from '../hooks/useGame';
 import { IGame } from '../interface';
+import { motion } from 'framer-motion';
 
 export const HeadGame = () => {
   const { gameState, updatePlayers, changePlayerAndColor } = useGame();
   const { color, players } = gameState;
+
   useEffect(() => {
     socket.on('game:initial-current-user', (currentPlayer: number) => {
       changePlayerAndColor({ currentPlayer });

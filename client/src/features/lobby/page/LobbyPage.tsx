@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Button, Flex, Stack } from '@chakra-ui/react';
+
 import { useHistory } from 'react-router-dom';
 
 // custom hooks
@@ -12,13 +12,12 @@ import { IAuth } from '../../../interfaces';
 import { IGame } from '../../game/interface';
 
 // utils and components
-import { ContainerComponent } from '../../../components/ContainerComponent';
-import { ShowBoxPosition } from '../components/ShowBoxPosition';
+import { LobbyView } from '../views/LobbyView';
 import { socket } from '../../../lib/sockets';
-import { FaceUpAnimateComponent } from '../../../components/FaceUpAnimateComponent';
 
 export const LobbyPage = () => {
   const { onClose } = useMyModal();
+
   const { handlePassUsersToPlayer, updatePlayers } = useGame();
   const { authState } = useAuth();
   const { auth, players } = authState;
@@ -33,7 +32,7 @@ export const LobbyPage = () => {
       token: 0,
     }));
     handlePassUsersToPlayer(newPlayers);
-    
+
     socket.emit('game:initial-current-user', auth.id);
     socket.emit('game:ready', auth.id);
   };
@@ -47,28 +46,11 @@ export const LobbyPage = () => {
   useEffect(() => {
     socket.on('game:init', (data) => {
       if (data) {
-        history.push('/game');
+        setTimeout(() => {
+          history.push('/game');
+        }, 1000);
       }
     });
   }, [onClose]);
-  return (
-    <>
-      <ContainerComponent>
-        <Flex mb={3} w={'100%'} flexDirection={'row'} justifyContent={'space-around'} alignItems={'center'}>
-          {players.map((user: IAuth) => (
-            <FaceUpAnimateComponent key={user.id}>
-              <ShowBoxPosition user={user} key={user.id} />
-            </FaceUpAnimateComponent>
-          ))}
-        </Flex>
-        <Stack spacing={4} mt={10}>
-          <FaceUpAnimateComponent>
-            <Button variant={'solid'} colorScheme='teal' onClick={handleEntryGame}>
-              Entry Game
-            </Button>
-          </FaceUpAnimateComponent>
-        </Stack>
-      </ContainerComponent>
-    </>
-  );
+  return <LobbyView handleEntryGame={handleEntryGame} />;
 };

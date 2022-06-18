@@ -1,12 +1,15 @@
 import { Box, Button, Heading, Spinner, Text, VStack } from '@chakra-ui/react';
 
+// hooks
+import { useAuth } from '../../../hook/useAuth';
+import { useMyModal } from '../../../hook/useMyModal';
+
+// utils
 import { ContainerComponent } from '../../../components/ContainerComponent';
 import { FaceUpAnimateComponent } from '../../../components/FaceUpAnimateComponent';
 import { ModalComponent } from '../../../components/ModalComponent';
 import { AcepMatched } from '../components/AcepMatched';
-import { TotalUsers } from '../components/TotalUsers';
-import { useAuth } from '../../../hook/useAuth';
-import { useMyModal } from '../../../hook/useMyModal';
+
 interface Props {
   matchAccepted: boolean;
   handleAccept: () => void;
@@ -31,7 +34,6 @@ export const HomeView = ({
   if (matchFound && !matchAccepted) {
     return (
       <ContainerComponent>
-        <TotalUsers />
         <FaceUpAnimateComponent>
           <Heading py={3}>{auth && auth.userName}</Heading>
         </FaceUpAnimateComponent>
@@ -49,11 +51,10 @@ export const HomeView = ({
       </ContainerComponent>
     );
   }
-  
+
   if (matchAccepted) {
     return (
       <ContainerComponent>
-        <TotalUsers />
         <FaceUpAnimateComponent>
           <Heading py={3}>{auth && auth.userName}</Heading>
         </FaceUpAnimateComponent>
@@ -78,7 +79,6 @@ export const HomeView = ({
 
   if (matchRejected) {
     <ContainerComponent>
-      <TotalUsers />
       <FaceUpAnimateComponent>
         <Heading py={3}>{auth && auth.userName}</Heading>
       </FaceUpAnimateComponent>
@@ -103,7 +103,6 @@ export const HomeView = ({
   }
   return (
     <ContainerComponent>
-      <TotalUsers />
       <FaceUpAnimateComponent>
         <Heading py={3}>{auth && auth.userName}</Heading>
       </FaceUpAnimateComponent>

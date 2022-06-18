@@ -1,23 +1,23 @@
-import {  Icon, Tag, TagLabel, Text } from '@chakra-ui/react';
+import { Icon, Tag, TagLabel, Text } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { FaUserAlt } from 'react-icons/fa';
 
-import { IGame } from '../../game/interface';
-
-
+import { IAuth } from '../../../interfaces';
 
 interface Props {
-  user: IGame;
+  user: IAuth;
 }
 // FaUserAlt
 export const UserBoxRight = ({ user }: Props) => {
   return (
     <motion.div
       initial={{
-        x: 20,
+        x: -30,
+        y:-20
       }}
       animate={{
-        x: -30,
+        x: 30,
+        y:10,
         transition: {
           duration: 1,
           ease: 'easeInOut',
@@ -26,9 +26,18 @@ export const UserBoxRight = ({ user }: Props) => {
         },
       }}
     >
-      <Tag size={'lg'} variant='outline' colorScheme={'teal'} h={'100px'} w={'100px'}>
-        <TagLabel fontSize={'md'} textAlign='center'>
-          <Text noOfLines={[1, 2, 3]} my={1} >{user.userName}</Text>
+      <Tag size={'lg'} variant='outline' colorScheme={'teal'} borderRadius={'50%'} h={'6.5em'} w={'7em'}>
+        <TagLabel
+          alignItems={'center'}
+          display='flex'
+          flexDir={'column'}
+          fontSize={'md'}
+          mx='auto'
+          justifyContent='center'
+        >
+          <Text noOfLines={[1, 2, 3]} my={1}>
+            {user.userName}
+          </Text>
           <Icon as={FaUserAlt} textAlign='center' />
         </TagLabel>
       </Tag>

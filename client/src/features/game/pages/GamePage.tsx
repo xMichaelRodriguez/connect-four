@@ -3,7 +3,6 @@ import { VStack } from '@chakra-ui/react';
 import { ContainerGame } from '../components/ContainerGame';
 import { Board } from '../components/Board';
 import { HeadGame } from '../components/HeadGame';
-import { FooterGame } from '../components/FooterGame';
 import { FaceUpAnimateComponent } from '../../../components/FaceUpAnimateComponent';
 export interface IPropsState {
   board: number[][];
@@ -20,7 +19,6 @@ export const GamePage = () => {
           <Board />
         </ContainerGame>
       </FaceUpAnimateComponent>
-      <FooterGame />
     </VStack>
   );
 };

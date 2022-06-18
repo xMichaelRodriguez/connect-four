@@ -1,5 +1,5 @@
 // interfaces
-import { IGame } from '../../game/interface';
+import { IAuth } from '../../../interfaces';
 
 // hooks
 import { useAuth } from '../../../hook/useAuth';
@@ -9,7 +9,7 @@ import { UserBoxLeft } from './UserBoxLeft';
 import { UserBoxRight } from './UserBoxRight';
 
 interface Props {
-  user: IGame;
+  user: IAuth;
 }
 
 export const ShowBoxPosition = ({ user }: Props) => {

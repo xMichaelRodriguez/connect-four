@@ -36,6 +36,7 @@ export const HomeQueue = () => {
     setMatchAccepted(true);
   };
   const handleRejected = () => {
+    console.log(auth.id)
     socket.emit('match-rejected', auth.id);
     setMatchFound(false);
   };
@@ -90,8 +91,8 @@ export const HomeQueue = () => {
     <HomeView
       matchRejected={matchRejected}
       handleAccept={handleAcepted}
-      handleMatchmaking={handleMatchmaking}
       matchFound={matchFound}
+      handleMatchmaking={handleMatchmaking}
       matchAccepted={matchAccepted}
       handelReject={handleRejected}
     />

@@ -1,6 +1,15 @@
 import { Server, Socket } from 'socket.io';
 import { User } from '../interfaces';
-import { queue, users, findRoomId, findUserIndexInRoom, rooms, minRoomSize, removeUserFromQueue } from '..';
+import {
+  queue,
+  users,
+  findRoomId,
+  findUserIndexInRoom,
+  rooms,
+  minRoomSize,
+  removeUserFromQueue,
+  removeUserFromRoom,
+} from '..';
 interface IResponse {
   userId: string;
   readyToPlay: boolean;
@@ -9,8 +18,6 @@ export default (io: Server, socket: Socket) => {
   socket.on('matchmaking', (data: IResponse) => {
     const userToQueue = users.filter((singleUser) => singleUser.id === data.userId)[0];
     queue.push({ ...userToQueue });
-
-
   });
 
   socket.on('acepted-matched', ({ id }: User) => {
@@ -40,11 +47,11 @@ export default (io: Server, socket: Socket) => {
 
     const myUser = users.filter((user) => user.id === id)[0];
     io.sockets.to(myUser.id).emit('in-room', myUser);
-
   });
 
-  socket.on('match-rejected', ({ id }: User) => {
+  socket.on('match-rejected', (id: string) => {
     console.log('match-rejected');
+    removeUserFromRoom(id);
     io.sockets.in(findRoomId(id)).emit('match-rejected', true);
     removeUserFromQueue(id);
   });

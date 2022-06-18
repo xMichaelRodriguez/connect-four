@@ -1,13 +1,13 @@
-import express, { Request, Response } from "express";
-import { Server, Socket } from "socket.io";
-import http from "http";
-import dotenv from "dotenv";
-import cors from "cors";
+import express, { Request, Response } from 'express';
+import { Server, Socket } from 'socket.io';
+import http from 'http';
+import dotenv from 'dotenv';
+import cors from 'cors';
 
-import queueEvents from "./routes/queueRoute";
-import userEvents from "./routes/usersRoute";
-import gameEvents from "./routes/gameRoute";
-import { IRoom, ISendUniqueRoom, ISocketId, User } from "./interfaces";
+import queueEvents from './routes/queueRoute';
+import userEvents from './routes/usersRoute';
+import gameEvents from './routes/gameRoute';
+import { IRoom, ISendUniqueRoom, ISocketId, User } from './interfaces';
 
 // config
 export let users: User[] = [];
@@ -21,11 +21,11 @@ export let queue: User[] = [];
 export const app = express();
 export const server = http.createServer(app);
 dotenv.config();
-app.set("port", process.env.PORT || 3000);
+app.set('port', process.env.PORT || 3000);
 const whiteList = [
-  "http://localhost:3000",
-  "http://192.168.0.15:3000/",
-  "https://connect-4-client.netlify.app",
+  'http://localhost:3000',
+  'http://192.168.0.15:3000/',
+  'https://connect-4-client.netlify.app',
 ];
 
 // middlewares
@@ -35,33 +35,33 @@ app.use(cors());
 const io = new Server(server, {
   cors: {
     origin: whiteList,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   },
 });
 
-app.get("/", (_: Request, res: Response) => {
-  return res.send("Hello World");
+app.get('/', (_: Request, res: Response) => {
+  return res.send('Hello World');
 });
 
 //socket.io
-io.on("connection", (socket: Socket) => {
+io.on('connection', (socket: Socket) => {
   // socket users
   userEvents(io, socket);
 
   // queue route
   queueEvents(io, socket);
-  socket.on("check-in", ({ userId }: { userId: number }) => {
+  socket.on('check-in', ({ userId }: { userId: number }) => {
     socketIds[userId] = socket.id;
   });
 
   // game route
   gameEvents(io, socket);
 
-  socket.on("check-in", ({ userId }: { userId: number }) => {
+  socket.on('check-in', ({ userId }: { userId: number }) => {
     socketIds[userId] = socket.id;
   });
 
-  socket.on("disconnect", () => {
+  socket.on('disconnect', () => {
     removeUserFromUser(socket.id);
     removeUserFromRoom(socket.id);
     removeUserFromQueue(socket.id);
@@ -75,7 +75,7 @@ export function addUser(username: string, socket: Socket) {
 
     id: socket.id,
     readyToPlay: false,
-    room: "",
+    room: '',
   };
   users.push(userToSave);
 
@@ -90,9 +90,7 @@ export function addUser(username: string, socket: Socket) {
 export function findRoomId(userId: string) {
   const roomsValues = Object.values(rooms);
   const singleValues = roomsValues.map((singleRoomValue) => {
-    return singleRoomValue.map(
-      (singleObjectInsideRoom) => singleObjectInsideRoom.id
-    );
+    return singleRoomValue.map((singleObjectInsideRoom) => singleObjectInsideRoom.id);
   });
 
   const roomIndex = singleValues.findIndex((roomMembers) => {
@@ -133,11 +131,8 @@ const findUserInRoom = (room: string, newRoomId: string) => {
   });
 };
 
-const sendUniqueRoomAndAddUserRoomAndQuitUserQueue = ({
-  room,
-  singleUser,
-}: ISendUniqueRoom) => {
-  sendUniqueRoom(socketIds[singleUser.id], "matched");
+const sendUniqueRoomAndAddUserRoomAndQuitUserQueue = ({ room, singleUser }: ISendUniqueRoom) => {
+  sendUniqueRoom(socketIds[singleUser.id], 'matched');
   const newUserToRoom = {
     ...singleUser,
     readyToPlay: false,
@@ -149,7 +144,7 @@ const sendUniqueRoomAndAddUserRoomAndQuitUserQueue = ({
 
 const checkIfMatchMakingUsersQueue = (newRoomId: string) => {
   queue.forEach((singleUser) => {
-    sendUniqueRoom(socketIds[singleUser.id], "matched");
+    sendUniqueRoom(socketIds[singleUser.id], 'matched');
     const newUserToRoom = {
       ...singleUser,
       readyToPlay: false,
@@ -167,9 +162,7 @@ export function sendUniqueRoom(userId: string, emitId: string) {
 }
 
 export function findUserIndexInRoom(userId: string, roomId: string) {
-  const userIndex = rooms[roomId].findIndex(
-    (userInRoom) => userInRoom.id === userId
-  );
+  const userIndex = rooms[roomId].findIndex((userInRoom) => userInRoom.id === userId);
 
   return userIndex;
 }
@@ -194,11 +187,13 @@ export function removeUserFromUser(id: string) {
   console.log(`bye ${users.length}`);
 }
 
-function removeUserFromRoom(id: string) {
+export function removeUserFromRoom(id: string) {
   const user = users.find((user) => user.id === id);
   if (user) {
-    const room = user.room;
-    rooms[room] = rooms[room].filter((user) => user.id !== id);
+    const room = Object.entries(rooms).find((room) => room[1].find((userInRoom) => userInRoom.id === id));
+    if (room !== undefined) {
+      rooms[room[0]] = rooms[room[0]].filter((user) => user.id !== id);
+      console.log(rooms);
+    }
   }
 }
-
