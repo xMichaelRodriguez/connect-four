@@ -15,9 +15,9 @@ client/build
 # misc
 client/.DS_Store
 
-client/.env.development.*
+client/.env.development
 client/.env.test.*
-client/.env.production.*
+client/.env.production
 
 # Logs
 logs
