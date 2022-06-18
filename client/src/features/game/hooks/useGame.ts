@@ -2,22 +2,24 @@ import { useContext } from 'react';
 import { GameContext } from '../context/GameContext';
 export const useGame = () => {
   const {
-    changePlayer,
+    changePlayerAndColor,
     gameState,
     handleChangeBoard,
-    handlePutToken,
     handlePassUsersToPlayer,
-    updatePlayers,
+    handlePutToken,
     updateBoard,
+    updatePlayers,
+    winTieOrLostPlayer
   } = useContext(GameContext);
 
   return {
-    changePlayer,
+    changePlayerAndColor,
     gameState,
     handleChangeBoard,
-    handlePutToken,
     handlePassUsersToPlayer,
-    updatePlayers,
+    handlePutToken,
     updateBoard,
+    updatePlayers,
+    winTieOrLostPlayer
   };
 };

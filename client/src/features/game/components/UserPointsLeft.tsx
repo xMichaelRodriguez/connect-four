@@ -22,12 +22,7 @@ export const UserPointsLeft = () => {
     if (player !== undefined) {
       setLocalPlayer(player);
     }
-
-    console.log('no hizo nad');
-    return () => {
-      setLocalPlayer({} as IGame);
-    };
-  }, []);
+  }, [players]);
   return (
     <HStack>
       <Tag py={'0.5em'} colorScheme='cyan' variant={'subtle'} my='0.5em'>

@@ -1,13 +1,15 @@
-import { Box, HStack, Kbd, Tag, TagLabel, TagLeftIcon, Text } from '@chakra-ui/react';
-import { useContext, useEffect, useState } from 'react';
+import { Box, HStack, Tag, TagLabel, TagLeftIcon, Text } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 import { GiPointySword } from 'react-icons/gi';
+
+// hooks
 import { useAuth } from '../../../hook/useAuth';
 import { useGame } from '../hooks/useGame';
+
+// interfaces
 import { IGame } from '../interface';
 
-interface Props {}
-
-export const UserPointsRight = (props: Props) => {
+export const UserPointsRight = () => {
   const { authState } = useAuth();
   const { gameState } = useGame();
   const { auth } = authState;
@@ -21,10 +23,7 @@ export const UserPointsRight = (props: Props) => {
     if (player !== undefined) {
       setAdversaryPlayer(player);
     }
-    return () => {
-      setAdversaryPlayer({} as IGame);
-    };
-  }, []);
+  }, [players]);
 
   return (
     <HStack>

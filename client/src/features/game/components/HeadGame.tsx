@@ -10,11 +10,11 @@ import { useGame } from '../hooks/useGame';
 import { IGame } from '../interface';
 
 export const HeadGame = () => {
-  const { gameState, updatePlayers, changePlayer } = useGame();
+  const { gameState, updatePlayers, changePlayerAndColor } = useGame();
   const { color, players } = gameState;
   useEffect(() => {
-    socket.on('game:initial-current-user', (currentUser) => {
-      changePlayer({ currentUser });
+    socket.on('game:initial-current-user', (currentPlayer: number) => {
+      changePlayerAndColor({ currentPlayer });
     });
     return () => {
       socket.off('game:initial-current-user');
@@ -23,8 +23,7 @@ export const HeadGame = () => {
 
   useEffect(() => {
     socket.on('game:update-active-user', (data: number) => {
-     
-      changePlayer({ currentUser: data });
+      changePlayerAndColor({ currentPlayer: data });
     });
     return () => {
       socket.off('game:update-active-user');

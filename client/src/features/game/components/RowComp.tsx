@@ -1,9 +1,9 @@
 import { Td } from '@chakra-ui/react';
-import { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../../../context/AuthContext';
-import { socket } from '../../../lib/sockets';
+import { useEffect, useState } from 'react';
+import { useAuth } from '../../../hook/useAuth';
 
 import { useGame } from '../hooks/useGame';
+
 import { IGame } from '../interface';
 interface IProps {
   colIndex: number;
@@ -13,7 +13,7 @@ interface IProps {
 export const RowComp = ({ colIndex, rowIndex }: IProps) => {
   const { handlePutToken, gameState } = useGame();
   const { players, playerActive, board } = gameState;
-  const { authState } = useContext(AuthContext);
+  const { authState } = useAuth();
   const { auth } = authState;
 
   const [counter, setCounter] = useState(0);
@@ -51,7 +51,7 @@ export const RowComp = ({ colIndex, rowIndex }: IProps) => {
   useEffect(() => {
     const isValid = players.some((user) => user.id === auth.id && user.token !== playerActive);
     setCurrentPlayerNotActive(isValid);
-  }, [playerActive]);
+  }, [playerActive, players]);
 
   return (
     <Td
