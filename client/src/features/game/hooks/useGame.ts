@@ -7,9 +7,10 @@ export const useGame = () => {
     handleChangeBoard,
     handlePassUsersToPlayer,
     handlePutToken,
+    resetBoard,
     updateBoard,
     updatePlayers,
-    winTieOrLostPlayer
+    winTieOrLostPlayer,
   } = useContext(GameContext);
 
   return {
@@ -18,6 +19,7 @@ export const useGame = () => {
     handleChangeBoard,
     handlePassUsersToPlayer,
     handlePutToken,
+    resetBoard,
     updateBoard,
     updatePlayers,
     winTieOrLostPlayer

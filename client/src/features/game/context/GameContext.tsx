@@ -13,6 +13,7 @@ export interface IGameContextProps {
   winTieOrLostPlayer: (winTieOrLostPlayer?: number) => void;
   updateBoard: (board: number[][]) => Promise<void>;
   updatePlayers: (players: IGame[]) => void;
+  resetBoard: () => void;
 }
 
 export const GameContext = createContext<IGameContextProps>({} as IGameContextProps);

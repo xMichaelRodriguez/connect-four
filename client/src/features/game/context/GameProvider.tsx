@@ -5,7 +5,8 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 // interfaces
 import { IChangeBoard, IGame, IGameState, IStateWin } from '../interface/index';
 
-import { useHistory } from 'react-router-dom';
+// hooks
+import { useAuth } from '../../../hook/useAuth';
 
 // utils
 import { getFirstEmptyRow, isTie, isWinner } from '../../../lib/utilsGame';
@@ -29,6 +30,9 @@ const INITIAL_STATE: IGameState = {
 export const GameProvider = ({ children }: props) => {
   const [gameState, dispatch] = useReducer(gameReducer, INITIAL_STATE);
   const { players, playerActive, board } = gameState;
+
+  const { authState } = useAuth();
+  const { auth } = authState;
 
   // set ramdon token to players
   const setTokenUserRamdon = (players: IGame[]): IGame[] => {
@@ -97,6 +101,7 @@ export const GameProvider = ({ children }: props) => {
     }
 
     if (winPlayer.isWin) {
+      socket.emit('game:win', { description: winPlayer.description, userId: auth.id, playerActive });
       Swal.fire({
         title: 'Win!',
         text: winPlayer.description,
@@ -108,21 +113,20 @@ export const GameProvider = ({ children }: props) => {
         if (resp.isConfirmed) {
           console.log('REINICIO  PARTIDA');
         }
-
-        console.log('SALIO DEL JUEGO');
+        socket.emit('game:end-game', auth.id);
+        resetBoard()
+        window.history.go(-3);
       });
-      socket.emit('game:win', { description: winPlayer.description, userId: players[0].id, playerActive });
     }
   };
 
   // checker function
-
   const checkGameStatus = (currentPlayer: number): IStateWin => {
     const winPlayer: IGame | undefined = players.find((user: IGame) => user.token === currentPlayer);
     if (isWinner({ player: currentPlayer, board })) {
       if (!!winPlayer) return { isWin: true, description: `player ${winPlayer.userName} wins` };
     } else if (isTie({ board })) {
-      if (!!winPlayer) return { isWin: true, description: `player ${winPlayer.userName} wins` };
+      if (!!winPlayer) return { isWin: true, description: `Tie` };
     }
     return {
       isWin: false,
@@ -148,12 +152,17 @@ export const GameProvider = ({ children }: props) => {
     winTieOrLostPlayer();
   };
 
+  const resetBoard = () => {
+    dispatch({ type: typesGame.RESET_BOARD, payload: INITIAL_STATE.board });
+  };
+
   const defaultValue = {
     changePlayerAndColor,
     gameState,
     handleChangeBoard,
     handlePassUsersToPlayer,
     handlePutToken,
+    resetBoard,
     updateBoard,
     updatePlayers,
     winTieOrLostPlayer,

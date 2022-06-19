@@ -69,4 +69,10 @@ export default (io: Server, socket: Socket) => {
       io.sockets.in(roomId).emit('game:win', { description, userId, playerActive });
     }
   });
+
+  socket.on('game:end-game', (userId: string) => {
+    const room = findRoomId(userId);
+    socket.in(room).emit('game:end-game');
+    delete rooms[room];
+  });
 };
