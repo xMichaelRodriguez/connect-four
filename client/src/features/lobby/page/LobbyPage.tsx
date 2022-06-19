@@ -1,40 +1,44 @@
-import { useContext, useEffect } from 'react';
-import { Button, Flex, Stack } from '@chakra-ui/react';
+import { useEffect } from 'react';
 
-import { AuthContext, User } from '../../../context/AuthContext';
-import { ModalContext } from '../../../context/ModalContext';
-import { ContainerComponent } from '../../../components/ContainerComponent';
-import { ShowBoxPosition } from '../components/ShowBoxPosition';
 import { useHistory } from 'react-router-dom';
-import { GameContext, Player } from '../../game/context/GameContext';
+
+// custom hooks
+import { useAuth } from '../../../hook/useAuth';
+import { useGame } from '../../game/hooks/useGame';
+import { useMyModal } from '../../../hook/useMyModal';
+
+// interfaces
+import { IAuth } from '../../../interfaces';
+import { IGame } from '../../game/interface';
+
+// utils and components
+import { LobbyView } from '../views/LobbyView';
 import { socket } from '../../../lib/sockets';
-import { FaceUpAnimateComponent } from '../../../components/FaceUpAnimateComponent';
+
 export const LobbyPage = () => {
-  const {
-    users,
-    auth: { id },
-  } = useContext(AuthContext);
-  const { handlePassUsersToPlayer, updatePlayers } = useContext(GameContext);
-  const { isOpen, onClose, onOpen } = useContext(ModalContext);
+  const { onClose } = useMyModal();
+
+  const { handlePassUsersToPlayer, updatePlayers } = useGame();
+  const { authState } = useAuth();
+  const { auth, players } = authState;
 
   const history = useHistory();
 
   const handleEntryGame = () => {
-    onOpen();
-    socket.emit('game:ready', id);
-    socket.emit('game:initial-current-user', id);
-    const newPlayers: Player[] = users.map((user: User) => ({
+    const newPlayers: IGame[] = players.map((user: IAuth) => ({
       ...user,
-      canPlay: false,
+
       color: '',
       token: 0,
     }));
-
     handlePassUsersToPlayer(newPlayers);
+
+    socket.emit('game:initial-current-user', auth.id);
+    socket.emit('game:ready', auth.id);
   };
 
   useEffect(() => {
-    socket.on('game:updated-token-users', (data: Player[]) => {
+    socket.on('game:updated-token-users', (data: IGame[]) => {
       updatePlayers(data);
     });
   }, [updatePlayers]);
@@ -42,29 +46,11 @@ export const LobbyPage = () => {
   useEffect(() => {
     socket.on('game:init', (data) => {
       if (data) {
-        onClose();
-        history.push('/game');
+        setTimeout(() => {
+          history.push('/game');
+        }, 1000);
       }
     });
   }, [onClose]);
-  return (
-    <>
-      <ContainerComponent>
-        <Flex mb={3} w={'100%'} flexDirection={'row'} justifyContent={'space-around'} alignItems={'center'}>
-          {users.map((user: User) => (
-            <FaceUpAnimateComponent key={user.id}>
-              <ShowBoxPosition user={user} key={user.id} />
-            </FaceUpAnimateComponent>
-          ))}
-        </Flex>
-        <Stack spacing={4} mt={10}>
-          <FaceUpAnimateComponent>
-            <Button variant={'solid'} colorScheme='teal' onClick={handleEntryGame}>
-              Entry Game
-            </Button>
-          </FaceUpAnimateComponent>
-        </Stack>
-      </ContainerComponent>
-    </>
-  );
+  return <LobbyView handleEntryGame={handleEntryGame} />;
 };

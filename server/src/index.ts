@@ -22,8 +22,11 @@ export const app = express();
 export const server = http.createServer(app);
 dotenv.config();
 app.set('port', process.env.PORT || 3000);
-const whiteList = ['http://localhost:3000', 'https://connect-4-client.netlify.app']
-
+const whiteList = [
+  'http://localhost:3000',
+  'http://192.168.0.15:3000/',
+  'https://connect-4-client.netlify.app',
+];
 
 // middlewares
 app.use(express.json({}));
@@ -39,7 +42,6 @@ const io = new Server(server, {
 app.get('/', (_: Request, res: Response) => {
   return res.send('Hello World');
 });
-
 
 //socket.io
 io.on('connection', (socket: Socket) => {
@@ -80,8 +82,6 @@ export function addUser(username: string, socket: Socket) {
   return { userToSave };
 }
 
-
-
 /**
  *
  * @param userId ->id of user to find
@@ -112,7 +112,6 @@ export function checkIfMatchmaking() {
   Object.entries(rooms).forEach((room) => {
     if (room[1].length < minRoomSize) {
       findUserInRoom(room[0], newRoomId);
-
     } else {
       checkIfMatchMakingUsersQueue(newRoomId);
     }
@@ -168,21 +167,16 @@ export function findUserIndexInRoom(userId: string, roomId: string) {
   return userIndex;
 }
 
-
-
 export function generateRoomId() {
   return Math.random().toString(36).substring(2, 15);
-
 }
 // actualiza el token de juego de el arreglo de usuarios y
 // en la room de la que se encuentra el usuario
-export function updateRoomDataUser() {
-
-}
+export function updateRoomDataUser() {}
 
 export function updateCurrentUser() {
   const initialPlayer = Math.floor(Math.random() * 2) + 1;
-  return initialPlayer
+  return initialPlayer;
 }
 export function removeUserFromQueue(userId: string) {
   return (queue = queue.filter((user) => user.id !== userId));
@@ -193,10 +187,13 @@ export function removeUserFromUser(id: string) {
   console.log(`bye ${users.length}`);
 }
 
-function removeUserFromRoom(id: string) {
+export function removeUserFromRoom(id: string) {
   const user = users.find((user) => user.id === id);
   if (user) {
-    const room = user.room;
-    rooms[room] = rooms[room].filter((user) => user.id !== id);
+    const room = Object.entries(rooms).find((room) => room[1].find((userInRoom) => userInRoom.id === id));
+    if (room !== undefined) {
+      rooms[room[0]] = rooms[room[0]].filter((user) => user.id !== id);
+      console.log(rooms);
+    }
   }
 }

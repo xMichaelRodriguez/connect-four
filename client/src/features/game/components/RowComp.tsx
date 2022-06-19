@@ -1,17 +1,20 @@
 import { Td } from '@chakra-ui/react';
-import { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../../../context/AuthContext';
-import { socket } from '../../../lib/sockets';
+import { useEffect, useState } from 'react';
+import { useAuth } from '../../../hook/useAuth';
 
-import { GameContext, Player } from '../context/GameContext';
+import { useGame } from '../hooks/useGame';
+
+import { IGame } from '../interface';
 interface IProps {
   colIndex: number;
   rowIndex: number;
 }
 
 export const RowComp = ({ colIndex, rowIndex }: IProps) => {
-  const { board, handlePutToken, players, currentPlayer } = useContext(GameContext);
-  const { auth } = useContext(AuthContext);
+  const { handlePutToken, gameState } = useGame();
+  const { players, playerActive, board } = gameState;
+  const { authState } = useAuth();
+  const { auth } = authState;
 
   const [counter, setCounter] = useState(0);
   const [state, setstate] = useState('');
@@ -22,8 +25,8 @@ export const RowComp = ({ colIndex, rowIndex }: IProps) => {
 
     if (counter === 0) {
       if (!currentPlayerNotActive) {
-        const isValidPlayer: Player | undefined = players.users.find(
-          (user) => user.id === auth.id && currentPlayer === user.token
+        const isValidPlayer: IGame | undefined = players.find(
+          (user) => user.id === auth.id && playerActive === user.token
         );
         if (!!isValidPlayer) {
           handlePutToken({ rowIndex, currentPlayer: isValidPlayer });
@@ -46,9 +49,11 @@ export const RowComp = ({ colIndex, rowIndex }: IProps) => {
   }, [board]);
 
   useEffect(() => {
-    const isValid = players.users.some((user) => user.id === auth.id && user.token !== currentPlayer);
+    const isValid = players.some((user) => user.id === auth.id && user.token !== playerActive);
     setCurrentPlayerNotActive(isValid);
-  }, [currentPlayer]);
+  }, [playerActive, players]);
+
+
 
   return (
     <Td

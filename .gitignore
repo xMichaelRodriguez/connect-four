@@ -14,10 +14,10 @@ client/build
 
 # misc
 client/.DS_Store
-client/.env.local
-client/.env.development.local
-client/.env.test.local
-client/.env.production.local
+
+client/.env.development
+client/.env.test.*
+client/.env.production
 
 # Logs
 logs
@@ -43,3 +43,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+# Local Netlify folder
+.netlify

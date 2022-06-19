@@ -1,16 +1,9 @@
 import { createContext } from 'react';
+import { IAuth, IAuthState } from '../interfaces';
 
-export type User = {
-  id: string;
-  userName: string;
-  room?: string;
-  readyToPlay?: boolean;
+type IAuthStateProps = {
+  authState: IAuthState;
+  setLogin: (user: IAuth) => void;
+  setPlayers: (players: IAuth[]) => void;
 };
-export interface IAuthContextProps {
-  auth: User;
-  handleSetAuth: (user: User) => void;
-  users: User[];
-  handleSetUsers: (users: User[]) => void;
-}
-
-export const AuthContext = createContext<IAuthContextProps>({} as IAuthContextProps);
+export const AuthContext = createContext<IAuthStateProps>({} as IAuthStateProps);

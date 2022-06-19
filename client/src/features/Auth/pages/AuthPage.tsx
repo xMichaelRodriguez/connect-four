@@ -1,32 +1,32 @@
-import React, { useContext } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
-import { AuthContext } from '../../../context/AuthContext';
-import { socket } from '../../../lib/sockets';
-import { GameContext } from '../../game/context/GameContext';
-import { AuthView } from '../views/AuthView';
 
+import { socket } from '../../../lib/sockets';
+import { AuthView } from '../views/AuthView';
+import { IAuth } from '../../../interfaces';
+import { useAuth } from '../../../hook/useAuth';
 export interface IFormInput {
   username: string;
 }
 interface IResponse {
-  description: any;
+  description: IAuth | string;
   name: string;
 }
 
 export const AuthPage = () => {
-  const { handleSetAuth } = useContext(AuthContext);
   const history = useHistory();
-
+  const { setLogin } = useAuth();
   const { register, handleSubmit, formState } = useForm<IFormInput>();
+
   const onSubmit: SubmitHandler<IFormInput> = async ({ username }) => {
-    socket.emit('createUser', { username }, (data: IResponse) => {
+    socket.emit('createUser', { username: username.trim() }, (data: IResponse) => {
       if (data.name === 'userAlreadyExists') {
         alert(data.description);
       } else {
-        handleSetAuth(data.description);
-        
-        history.replace('/queue');
+        if (typeof data.description !== 'string') {
+          setLogin(data.description);
+          history.replace('/queue');
+        }
       }
     });
   };

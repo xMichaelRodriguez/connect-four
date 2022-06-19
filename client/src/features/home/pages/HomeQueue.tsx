@@ -1,14 +1,20 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { AuthContext, User } from '../../../context/AuthContext';
-import { ModalContext } from '../../../context/ModalContext';
+
+//hooks
+import { useAuth } from '../../../hook/useAuth';
+import { useMyModal } from '../../../hook/useMyModal';
+
+//my utils
+import { IAuth } from '../../../interfaces';
 import { socket } from '../../../lib/sockets';
 import { HomeView } from '../views/HomeView';
 
 export const HomeQueue = () => {
   const history = useHistory();
-  const { auth, handleSetAuth, handleSetUsers } = useContext(AuthContext);
-  const { onOpen, onClose } = useContext(ModalContext);
+  const { onOpen, onClose } = useMyModal();
+  const { authState, setLogin, setPlayers } = useAuth();
+  const { auth } = authState;
 
   const [matchRejected, setMatchRejected] = useState(false);
   const [matchFound, setMatchFound] = useState(false);
@@ -30,7 +36,9 @@ export const HomeQueue = () => {
     setMatchAccepted(true);
   };
   const handleRejected = () => {
+    console.log(auth.id)
     socket.emit('match-rejected', auth.id);
+    setMatchFound(false);
   };
 
   useEffect(() => {
@@ -40,8 +48,8 @@ export const HomeQueue = () => {
       setMatchFound(true);
     });
 
-    socket.on('in-room', (data: User) => {
-      handleSetAuth(data);
+    socket.on('in-room', (data: IAuth) => {
+      setLogin(data);
     });
     return () => {
       socket.off('check-in');
@@ -54,7 +62,6 @@ export const HomeQueue = () => {
   useEffect(() => {
     socket.on('match-rejected', (data: boolean) => {
       setMatchRejected(data);
-      console.log(data);
     });
     return () => {
       socket.off('match-rejected');
@@ -63,14 +70,15 @@ export const HomeQueue = () => {
   }, []);
 
   useEffect(() => {
-    socket.on('match-accepted', (users: User[]) => {
-      const newUsers: User[] = users.map(({ id, userName, room }: User) => ({
+    socket.on('match-accepted', (users: IAuth[]) => {
+      const newUsers: IAuth[] = users.map(({ id, userName, room }: IAuth) => ({
         id,
         userName,
         room,
       }));
-      handleSetUsers(newUsers);
+      setPlayers(newUsers);
       onClose();
+     
       history.push('/lobby');
     });
 
@@ -83,8 +91,8 @@ export const HomeQueue = () => {
     <HomeView
       matchRejected={matchRejected}
       handleAccept={handleAcepted}
-      handleMatchmaking={handleMatchmaking}
       matchFound={matchFound}
+      handleMatchmaking={handleMatchmaking}
       matchAccepted={matchAccepted}
       handelReject={handleRejected}
     />

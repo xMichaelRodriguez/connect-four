@@ -1,14 +1,15 @@
 import { Box, Button, Heading, Spinner, Text, VStack } from '@chakra-ui/react';
-import { useContext } from 'react';
-import { motion } from 'framer-motion';
 
+// hooks
+import { useAuth } from '../../../hook/useAuth';
+import { useMyModal } from '../../../hook/useMyModal';
+
+// utils
 import { ContainerComponent } from '../../../components/ContainerComponent';
 import { FaceUpAnimateComponent } from '../../../components/FaceUpAnimateComponent';
 import { ModalComponent } from '../../../components/ModalComponent';
-import { AuthContext } from '../../../context/AuthContext';
-import { ModalContext } from '../../../context/ModalContext';
 import { AcepMatched } from '../components/AcepMatched';
-import { TotalUsers } from '../components/TotalUsers';
+
 interface Props {
   matchAccepted: boolean;
   handleAccept: () => void;
@@ -26,13 +27,13 @@ export const HomeView = ({
   matchFound,
   matchRejected,
 }: Props) => {
-  const { auth } = useContext(AuthContext);
-  const { isOpen, onClose } = useContext(ModalContext);
+  const { isOpen, onClose } = useMyModal();
+  const { authState } = useAuth();
+  const { auth } = authState;
 
   if (matchFound && !matchAccepted) {
     return (
       <ContainerComponent>
-        <TotalUsers />
         <FaceUpAnimateComponent>
           <Heading py={3}>{auth && auth.userName}</Heading>
         </FaceUpAnimateComponent>
@@ -50,10 +51,10 @@ export const HomeView = ({
       </ContainerComponent>
     );
   }
+
   if (matchAccepted) {
     return (
       <ContainerComponent>
-        <TotalUsers />
         <FaceUpAnimateComponent>
           <Heading py={3}>{auth && auth.userName}</Heading>
         </FaceUpAnimateComponent>
@@ -78,7 +79,6 @@ export const HomeView = ({
 
   if (matchRejected) {
     <ContainerComponent>
-      <TotalUsers />
       <FaceUpAnimateComponent>
         <Heading py={3}>{auth && auth.userName}</Heading>
       </FaceUpAnimateComponent>
@@ -103,7 +103,6 @@ export const HomeView = ({
   }
   return (
     <ContainerComponent>
-      <TotalUsers />
       <FaceUpAnimateComponent>
         <Heading py={3}>{auth && auth.userName}</Heading>
       </FaceUpAnimateComponent>
