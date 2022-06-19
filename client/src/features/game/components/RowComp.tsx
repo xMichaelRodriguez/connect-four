@@ -53,6 +53,8 @@ export const RowComp = ({ colIndex, rowIndex }: IProps) => {
     setCurrentPlayerNotActive(isValid);
   }, [playerActive, players]);
 
+
+
   return (
     <Td
       cursor={currentPlayerNotActive ? 'not-allowed' : ''}

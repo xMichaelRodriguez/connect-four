@@ -4,6 +4,7 @@ export interface User {
   room: string;
   readyToPlay: boolean;
   initGame?: boolean;
+  playAgain?: boolean;
 }
 
 export interface ISocketId {

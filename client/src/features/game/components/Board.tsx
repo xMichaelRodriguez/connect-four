@@ -42,6 +42,19 @@ export const Board = () => {
       });
       resetBoard();
     });
+    return () => {
+      socket.off('game:end-game');
+    };
+  }, []);
+
+  useEffect(() => {
+    socket.on('game:play-again', () => {
+      resetBoard();
+    });
+
+    return () => {
+      socket.off('gameLplay-again');
+    };
   }, []);
 
   return (

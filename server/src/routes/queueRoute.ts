@@ -45,12 +45,13 @@ export default (io: Server, socket: Socket) => {
       }
     });
 
-    const myUser = users.filter((user) => user.id === id)[0];
-    io.sockets.to(myUser.id).emit('in-room', myUser);
+    const myUser = users.find((user) => user.id === id);
+    if (myUser !== undefined) {
+      io.sockets.to(myUser.id).emit('in-room', myUser);
+    }
   });
 
   socket.on('match-rejected', (id: string) => {
-    console.log('match-rejected');
     removeUserFromRoom(id);
     io.sockets.in(findRoomId(id)).emit('match-rejected', true);
     removeUserFromQueue(id);

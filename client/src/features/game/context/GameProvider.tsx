@@ -111,11 +111,12 @@ export const GameProvider = ({ children }: props) => {
         cancelButtonText: 'EndGame',
       }).then((resp) => {
         if (resp.isConfirmed) {
-          console.log('REINICIO  PARTIDA');
+          socket.emit('game:play-again', authState.auth);
+        } else {
+          socket.emit('game:end-game', auth.id);
+          resetBoard();
+          window.history.go(-3);
         }
-        socket.emit('game:end-game', auth.id);
-        resetBoard()
-        window.history.go(-3);
       });
     }
   };

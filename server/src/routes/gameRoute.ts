@@ -2,6 +2,7 @@ import { Server, Socket } from 'socket.io';
 import { findRoomId, findUserIndexInRoom, rooms, updateCurrentUser, users } from '..';
 import { IPlayer } from '../interfaces/index';
 type TWin = { description: string; userId: string; playerActive: number };
+
 export default (io: Server, socket: Socket) => {
   socket.on('game:update-token-users', (data: IPlayer[]) => {
     const roomId = findRoomId(data[0].id);
@@ -74,5 +75,29 @@ export default (io: Server, socket: Socket) => {
     const room = findRoomId(userId);
     socket.in(room).emit('game:end-game');
     delete rooms[room];
+  });
+
+  socket.on('game:play-again', (user: IPlayer) => {
+    const { id } = user;
+    const roomId = findRoomId(id);
+    const userIndex = findUserIndexInRoom(id, roomId);
+    const currentRoom = rooms[roomId];
+    currentRoom[userIndex].playAgain = true;
+
+    const currentRoomHasNotPlayAgain = currentRoom.map((userInRoom) => userInRoom.playAgain).includes(false);
+
+    if (!currentRoomHasNotPlayAgain) {
+      io.in(roomId).emit('game:play-again');
+    }
+
+    users.forEach((user) => {
+      if (user.id === id) {
+        user.playAgain = true;
+      }
+    });
+    const myUser = users.find((user) => user.id === id);
+    if (myUser !== undefined) {
+      io.sockets.in(myUser.id).emit('in-room', myUser);
+    }
   });
 };
