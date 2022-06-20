@@ -1,6 +1,5 @@
 import { IAuth, IAuthState } from '../../interfaces/index';
 
-
 type AuthAction = { type: 'AUTH_LOGIN'; payload: IAuth } | { type: 'SET_PLAYERS'; payload: IAuth[] };
 
 export const authReducer = (state: IAuthState, action: AuthAction): IAuthState => {

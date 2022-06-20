@@ -3,9 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "dev": "cross-env NODE_ENV=development vite",
+    "build": "cross-env NODE_ENV=production tsc && vite build",
+    "preview": "cross-env NODE_ENV=development vite preview",
+    "test": "cross-env NODE_ENV=development  jest src --verbose",
+    "lint-fix": "eslint  . --ext ts,tsx --fix"
   },
   "dependencies": {
     "@chakra-ui/react": "1.8.8",
@@ -13,9 +15,6 @@
     "@emotion/styled": "11.8.1",
     "@fontsource/open-sans": "^4.5.10",
     "@fontsource/raleway": "^4.5.9",
-    "@testing-library/jest-dom": "5.16.4",
-    "@testing-library/react": "12",
-    "@testing-library/user-event": "12",
     "framer-motion": "4.1.17",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -24,18 +23,54 @@
     "react-router-dom": "5.3.3",
     "react-scripts": "2.1.3",
     "socket.io-client": "4.5.1",
-    "sweetalert2": "^11.4.17",
-    "typescript": "4.7.2"
+    "sweetalert2": "^11.4.17"
   },
   "devDependencies": {
-    "@chakra-ui/cli": "^2.1.0",
+    "@babel/preset-env": "^7.18.2",
+    "@babel/preset-react": "^7.17.12",
+    "@babel/preset-typescript": "^7.17.12",
+    "@chakra-ui/cli": "2.1.0",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^12.1.5",
+    "@testing-library/user-event": "^14.2.1",
+    "@types/babel__core": "^7.1.19",
     "@types/jest": "27.5.1",
     "@types/node": "16.11.36",
-    "@types/react": "17.0.33",
+    "@types/react": "^17.0.33",
     "@types/react-dom": "17.0.10",
     "@types/react-router-dom": "5.3.3",
-    "@vitejs/plugin-react": "^1.3.0",
+    "@typescript-eslint/eslint-plugin": "^5.28.0",
+    "@typescript-eslint/parser": "^5.28.0",
+    "@vitejs/plugin-react": "1.3.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.18.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.30.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "28.1.1",
+    "prettier": "^2.7.1",
+    "ts-jest": "^28.0.5",
     "typescript": "4.6.3",
-    "vite": "^2.9.9"
+    "vite": "2.9.9"
+  },
+  "jest": {
+    "testEnvironment": "jest-environment-jsdom",
+    "setupFilesAfterEnv": [
+      "<rootDir>/setupTest.ts"
+    ],
+    "testMatch": [
+      "<rootDir>/src/**/*.test.{ts,tsx,js,jsx}"
+    ]
+  },
+  "collectCoverageFrom": [
+    "src/**/*.{ts,tsx,js,tsx}",
+    "!src/**/*.d.ts"
+  ],
+  "moduleNameMapper": {
+    "\\.(css|less)$": "identity-obj-proxy"
   }
 }

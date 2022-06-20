@@ -1,17 +1,19 @@
-import { Button, Heading, Stack, VStack } from "@chakra-ui/react";
+import {
+  Button, Heading, Stack, VStack,
+} from '@chakra-ui/react';
 
-//hooks
-import { useMyModal } from "../../../hook/useMyModal";
+// hooks
+import { useMyModal } from '../../../hook/useMyModal';
 
-//my utils
-import { FaceUpAnimateComponent } from "../../../components/FaceUpAnimateComponent";
+// my utils
+import { FaceUpAnimateComponent } from '../../../components/FaceUpAnimateComponent';
 
 interface Props {
   onAcepted: () => void;
   onRejected: () => void;
 }
 
-export const AcepMatched = ({ onAcepted, onRejected }: Props) => {
+export function AcepMatched({ onAcepted, onRejected }: Props) {
   const { onClose } = useMyModal();
 
   const handleRejectMatch = () => {
@@ -26,7 +28,7 @@ export const AcepMatched = ({ onAcepted, onRejected }: Props) => {
           spacing={4}
           direction="row"
           align="center"
-          justifyContent={"space-around"}
+          justifyContent="space-around"
         >
           <Button colorScheme="teal" onClick={onAcepted}>
             Accept
@@ -42,4 +44,4 @@ export const AcepMatched = ({ onAcepted, onRejected }: Props) => {
       </FaceUpAnimateComponent>
     </VStack>
   );
-};
+}

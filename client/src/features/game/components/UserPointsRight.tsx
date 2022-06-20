@@ -9,7 +9,7 @@ import { useGame } from '../hooks/useGame';
 // interfaces
 import { IGame } from '../interface';
 
-export const UserPointsRight = () => {
+export function UserPointsRight() {
   const { authState } = useAuth();
   const { gameState } = useGame();
   const { auth } = authState;
@@ -18,7 +18,7 @@ export const UserPointsRight = () => {
   const [adversaryPlayer, setAdversaryPlayer] = useState<IGame>();
 
   useEffect(() => {
-    const player: IGame | undefined = players.find((player) => player.id !== auth.id);
+    const player: IGame | undefined = players.find((singlePlayer) => singlePlayer.id !== auth.id);
 
     if (player !== undefined) {
       setAdversaryPlayer(player);
@@ -27,19 +27,19 @@ export const UserPointsRight = () => {
 
   return (
     <HStack>
-      <Tag my='0.5em' py={'0.5em'} colorScheme='teal' variant={'subtle'}>
-        <TagLeftIcon as={GiPointySword} boxSize={'1.5em'} />
-        <TagLabel fontSize={'1.1em'} px={'0.5em'}>
+      <Tag my="0.5em" py="0.5em" colorScheme="teal" variant="subtle">
+        <TagLeftIcon as={GiPointySword} boxSize="1.5em" />
+        <TagLabel fontSize="1.1em" px="0.5em">
           <Text>{adversaryPlayer && adversaryPlayer.userName}:</Text>
           <Box
             bg={adversaryPlayer && adversaryPlayer.color}
-            borderRadius={'100%'}
-            h='1em'
+            borderRadius="100%"
+            h="1em"
             mt={1}
-            w='1em'
-          ></Box>
+            w="1em"
+          />
         </TagLabel>
       </Tag>
     </HStack>
   );
-};
+}

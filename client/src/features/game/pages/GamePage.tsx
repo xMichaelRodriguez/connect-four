@@ -5,9 +5,9 @@ import { Board } from '../components/Board';
 import { HeadGame } from '../components/HeadGame';
 import { FaceUpAnimateComponent } from '../../../components/FaceUpAnimateComponent';
 
-export const GamePage = () => {
+export function GamePage() {
   return (
-    <VStack mb={3} minH={'80%'} minW={'80%'}>
+    <VStack mb={3} minH="80%" minW="80%">
       <HeadGame />
       <FaceUpAnimateComponent>
         <ContainerGame>
@@ -16,4 +16,4 @@ export const GamePage = () => {
       </FaceUpAnimateComponent>
     </VStack>
   );
-};
+}

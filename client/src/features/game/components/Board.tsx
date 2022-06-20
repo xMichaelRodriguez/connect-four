@@ -1,18 +1,19 @@
 import { Table, TableContainer, Tbody } from '@chakra-ui/react';
 import { useEffect } from 'react';
 
+import Swal from 'sweetalert2';
+import { useHistory } from 'react-router-dom';
 import { IStateWin } from '../interface';
 // hook
 import { useGame } from '../hooks/useGame';
 
 import { socket } from '../../../lib/sockets';
 import { ColComp } from './ColComp';
-import Swal from 'sweetalert2';
-import { useHistory } from 'react-router-dom';
+
 interface ISocketWin extends IStateWin {
   playerActive: number;
 }
-export const Board = () => {
+export function Board() {
   const { gameState, updateBoard, resetBoard, winTieOrLostPlayer } = useGame();
   const { board } = gameState;
   const history = useHistory();
@@ -20,7 +21,7 @@ export const Board = () => {
     socket.on('game:update-board', (newBoard: number[][]) => {
       updateBoard(newBoard);
     });
-    socket.on('game:win', ({ description, isWin, playerActive }: ISocketWin) => {
+    socket.on('game:win', ({ playerActive }: ISocketWin) => {
       winTieOrLostPlayer(playerActive);
     });
 
@@ -37,9 +38,7 @@ export const Board = () => {
         text: 'The opponent left the game',
         icon: 'info',
         confirmButtonText: 'return to home',
-      }).then((resp) => {
-        if (resp) return history.replace('/queue');
-      });
+      }).then((resp) => resp.isConfirmed && history.replace('/queue'));
       resetBoard();
     });
     return () => {
@@ -59,7 +58,7 @@ export const Board = () => {
 
   return (
     <TableContainer>
-      <Table variant={'simple'} overflowX={'auto'}>
+      <Table variant="simple" overflowX="auto">
         <Tbody>
           {board.map((row, indexRow) => (
             <ColComp rows={row} colIndex={indexRow} key={indexRow} />
@@ -68,4 +67,4 @@ export const Board = () => {
       </Table>
     </TableContainer>
   );
-};
+}

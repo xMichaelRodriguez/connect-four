@@ -12,7 +12,7 @@ interface Props {
   user: IAuth;
 }
 
-export const ShowBoxPosition = ({ user }: Props) => {
+export function ShowBoxPosition({ user }: Props) {
   const { authState } = useAuth();
   const { auth } = authState;
 
@@ -21,4 +21,4 @@ export const ShowBoxPosition = ({ user }: Props) => {
   }
 
   return <UserBoxRight user={user} />;
-};
+}

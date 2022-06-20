@@ -1,20 +1,23 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-//hooks
+// hooks
 import { useAuth } from '../../../hook/useAuth';
 import { useMyModal } from '../../../hook/useMyModal';
 
-//my utils
+// my utils
 import { IAuth } from '../../../interfaces';
 import { socket } from '../../../lib/sockets';
+import { useGame } from '../../game/hooks/useGame';
+import { IGame } from '../../game/interface';
 import { HomeView } from '../views/HomeView';
 
-export const HomeQueue = () => {
+export function HomeQueue() {
   const history = useHistory();
   const { onOpen, onClose } = useMyModal();
   const { authState, setLogin, setPlayers } = useAuth();
   const { auth } = authState;
+  const { handlePassUsersToPlayer } = useGame();
 
   const [matchRejected, setMatchRejected] = useState(false);
   const [matchFound, setMatchFound] = useState(false);
@@ -36,7 +39,6 @@ export const HomeQueue = () => {
     setMatchAccepted(true);
   };
   const handleRejected = () => {
-    console.log(auth.id)
     socket.emit('match-rejected', auth.id);
     setMatchFound(false);
   };
@@ -77,8 +79,10 @@ export const HomeQueue = () => {
         room,
       }));
       setPlayers(newUsers);
+      const newPlayers: IGame[] = newUsers.map((user) => ({ ...user, color: '', token: 0 }));
+      handlePassUsersToPlayer(newPlayers);
       onClose();
-     
+
       history.push('/lobby');
     });
 
@@ -97,5 +101,4 @@ export const HomeQueue = () => {
       handelReject={handleRejected}
     />
   );
-};
-``;
+}

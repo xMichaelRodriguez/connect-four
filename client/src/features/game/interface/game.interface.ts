@@ -1,4 +1,5 @@
 import { IAuth } from '../../../interfaces/index';
+
 export interface IGame extends IAuth {
   color: string;
   token: number;

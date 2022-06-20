@@ -19,14 +19,14 @@ interface Props {
   matchRejected: boolean;
 }
 
-export const HomeView = ({
+export function HomeView({
   matchAccepted,
   handleAccept,
   handelReject,
   handleMatchmaking,
   matchFound,
   matchRejected,
-}: Props) => {
+}: Props) {
   const { isOpen, onClose } = useMyModal();
   const { authState } = useAuth();
   const { auth } = authState;
@@ -39,7 +39,7 @@ export const HomeView = ({
         </FaceUpAnimateComponent>
         <Box>
           <FaceUpAnimateComponent>
-            <Button variant={'outline'} colorScheme={'teal'} onClick={handleMatchmaking}>
+            <Button variant="outline" colorScheme="teal" onClick={handleMatchmaking}>
               Battle
             </Button>
           </FaceUpAnimateComponent>
@@ -60,16 +60,16 @@ export const HomeView = ({
         </FaceUpAnimateComponent>
         <Box>
           <FaceUpAnimateComponent>
-            <Button variant={'outline'} colorScheme={'teal'} onClick={handleMatchmaking}>
+            <Button variant="outline" colorScheme="teal" onClick={handleMatchmaking}>
               Battle
             </Button>
           </FaceUpAnimateComponent>
           <ModalComponent isOpen={isOpen} onClose={onClose}>
-            <VStack h={'100px'}>
-              <Text fontWeight={'bold'} color={'white'}>
+            <VStack h="100px">
+              <Text fontWeight="bold" color="white">
                 Waiting for the other player to accept the game
               </Text>
-              <Spinner thickness='9px' emptyColor='gray.200' color='teal.800' size='xl' />
+              <Spinner thickness="9px" emptyColor="gray.200" color="teal.800" size="xl" />
             </VStack>
           </ModalComponent>
         </Box>
@@ -84,16 +84,16 @@ export const HomeView = ({
       </FaceUpAnimateComponent>
       <Box>
         <FaceUpAnimateComponent>
-          <Button variant={'outline'} colorScheme={'teal'} onClick={handleMatchmaking}>
+          <Button variant="outline" colorScheme="teal" onClick={handleMatchmaking}>
             Battle
           </Button>
         </FaceUpAnimateComponent>
         <ModalComponent isOpen={isOpen} onClose={onClose}>
-          <VStack h={'100px'}>
-            <Text fontWeight={'bold'} color={'white'}>
+          <VStack h="100px">
+            <Text fontWeight="bold" color="white">
               {matchRejected}
             </Text>
-            <Button variant={'solid'} colorScheme='cyan'>
+            <Button variant="solid" colorScheme="cyan">
               Close
             </Button>
           </VStack>
@@ -108,17 +108,17 @@ export const HomeView = ({
       </FaceUpAnimateComponent>
       <Box>
         <FaceUpAnimateComponent>
-          <Button variant={'outline'} colorScheme={'teal'} onClick={handleMatchmaking}>
+          <Button variant="outline" colorScheme="teal" onClick={handleMatchmaking}>
             Battle
           </Button>
         </FaceUpAnimateComponent>
         <ModalComponent isOpen={isOpen} onClose={onClose}>
           <VStack>
             <Text>Searching for oponents</Text>
-            <Spinner thickness='6px' speed='0.65s' emptyColor='gray.200' color='teal' size='xl' />
+            <Spinner thickness="6px" speed="0.65s" emptyColor="gray.200" color="teal" size="xl" />
           </VStack>
         </ModalComponent>
       </Box>
     </ContainerComponent>
   );
-};
+}

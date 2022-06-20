@@ -6,12 +6,12 @@ interface Props {
   colIndex: number;
 }
 
-export const ColComp = ({ rows, colIndex }: Props) => {
+export function ColComp({ rows, colIndex }: Props) {
   return (
-    <Tr borderWidth={'0.1em'}>
+    <Tr borderWidth="0.1em">
       {rows.map((rowIndex, index) => (
         <RowComp key={index} colIndex={colIndex} rowIndex={index} />
       ))}
     </Tr>
   );
-};
+}

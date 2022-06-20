@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { GameContext } from '../context/GameContext';
+
 export const useGame = () => {
   const {
     changePlayerAndColor,
@@ -22,6 +23,6 @@ export const useGame = () => {
     resetBoard,
     updateBoard,
     updatePlayers,
-    winTieOrLostPlayer
+    winTieOrLostPlayer,
   };
 };

@@ -7,5 +7,5 @@ export interface IModalProps {
 }
 
 export const ModalContext = createContext<IModalProps>(
-  {} as IModalProps
+  {} as IModalProps,
 );

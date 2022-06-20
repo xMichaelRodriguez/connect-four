@@ -1,10 +1,11 @@
 import { motion } from 'framer-motion';
 import React, { ReactNode } from 'react';
+
 interface IProps {
   children: ReactNode;
 }
 
-export const FaceUpAnimateComponent = ({ children }: IProps) => {
+export function FaceUpAnimateComponent({ children }: IProps) {
   return (
     <motion.div
       initial={{ y: 10, opacity: 0 }}
@@ -15,4 +16,4 @@ export const FaceUpAnimateComponent = ({ children }: IProps) => {
       {children}
     </motion.div>
   );
-};
+}

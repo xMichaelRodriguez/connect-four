@@ -1,23 +1,28 @@
-import { Flex } from "@chakra-ui/react";
-import { useContext, useEffect } from "react";
+import { Flex } from '@chakra-ui/react';
+import { useContext, useEffect } from 'react';
 
-import { Switch, Route, Redirect, useHistory } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
-import { ModalProvider } from "../context/ModalProvider";
-import { routes } from "./routes";
-export const Navigation = () => {
+import {
+  Redirect, Route, Switch, useHistory,
+} from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
+import { ModalProvider } from '../context/ModalProvider';
+import { routes } from './routes';
+
+export function Navigation() {
   const history = useHistory();
   const { authState } = useContext(AuthContext);
   useEffect(() => {
     if (Object.entries(authState.auth).length === 0) {
-      history.replace("/");
+      history.replace('/');
     }
   }, []);
   return (
     <ModalProvider>
-      <Flex justifyContent="center" align="center" h={"100vh"}>
+      <Flex justifyContent="center" align="center" h="100vh">
         <Switch>
-          {routes.map(({ name, path, component, exact }) => (
+          {routes.map(({
+            name, path, component, exact,
+          }) => (
             <Route key={name} path={path} component={component} exact={exact} />
           ))}
           <Redirect to={routes[0].path} />
@@ -25,4 +30,4 @@ export const Navigation = () => {
       </Flex>
     </ModalProvider>
   );
-};
+}

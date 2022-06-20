@@ -14,5 +14,4 @@ export interface IChangeBoard {
   playerId?: string;
 }
 
-export * from "./game.interface";
-
+export * from './game.interface';

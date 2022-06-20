@@ -15,7 +15,7 @@ import { IGame } from '../../game/interface';
 import { LobbyView } from '../views/LobbyView';
 import { socket } from '../../../lib/sockets';
 
-export const LobbyPage = () => {
+export function LobbyPage() {
   const { onClose } = useMyModal();
 
   const { handlePassUsersToPlayer, updatePlayers } = useGame();
@@ -24,14 +24,13 @@ export const LobbyPage = () => {
 
   const history = useHistory();
 
-  const handleEntryGame = () => {
+  const handleEntryGame = async () => {
     const newPlayers: IGame[] = players.map((user: IAuth) => ({
       ...user,
-
       color: '',
       token: 0,
     }));
-    handlePassUsersToPlayer(newPlayers);
+    await handlePassUsersToPlayer(newPlayers);
 
     socket.emit('game:initial-current-user', auth.id);
     socket.emit('game:ready', auth.id);
@@ -53,4 +52,4 @@ export const LobbyPage = () => {
     });
   }, [onClose]);
   return <LobbyView handleEntryGame={handleEntryGame} />;
-};
+}

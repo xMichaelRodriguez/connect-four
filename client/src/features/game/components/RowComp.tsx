@@ -5,12 +5,13 @@ import { useAuth } from '../../../hook/useAuth';
 import { useGame } from '../hooks/useGame';
 
 import { IGame } from '../interface';
+
 interface IProps {
   colIndex: number;
   rowIndex: number;
 }
 
-export const RowComp = ({ colIndex, rowIndex }: IProps) => {
+export function RowComp({ colIndex, rowIndex }: IProps) {
   const { handlePutToken, gameState } = useGame();
   const { players, playerActive, board } = gameState;
   const { authState } = useAuth();
@@ -26,9 +27,9 @@ export const RowComp = ({ colIndex, rowIndex }: IProps) => {
     if (counter === 0) {
       if (!currentPlayerNotActive) {
         const isValidPlayer: IGame | undefined = players.find(
-          (user) => user.id === auth.id && playerActive === user.token
+          (user) => user.id === auth.id && playerActive === user.token,
         );
-        if (!!isValidPlayer) {
+        if (isValidPlayer) {
           handlePutToken({ rowIndex, currentPlayer: isValidPlayer });
           setCounter(0);
         }
@@ -53,17 +54,15 @@ export const RowComp = ({ colIndex, rowIndex }: IProps) => {
     setCurrentPlayerNotActive(isValid);
   }, [playerActive, players]);
 
-
-
   return (
     <Td
       cursor={currentPlayerNotActive ? 'not-allowed' : ''}
       onClick={handleClick}
-      borderRadius={'30%'}
-      borderWidth={'0.1em'}
+      borderRadius="30%"
+      borderWidth="0.1em"
       bg={state}
-      h='4em'
-      w='4em'
-    ></Td>
+      h="4em"
+      w="4em"
+    />
   );
-};
+}

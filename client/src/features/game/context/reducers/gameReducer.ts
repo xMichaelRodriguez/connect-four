@@ -1,13 +1,6 @@
 import { IGame, IGameState } from '../../interface/game.interface';
+import { typesGame } from '../typesGame';
 
-export enum typesGame {
-  CHANGE_ACTIVE_PLAYERS = '[GAME] change active player of game',
-  SET_PLAYERS = '[GAME] set player  state',
-  CHANGE_COLOR = '[GAME] change color active player',
-  PLAYERS_IN_GAME = '[GAME] pass the users from the authcontext to the gamecontext',
-  UPDATE_BOARD = '[GAME] update board',
-  RESET_BOARD = '[GAME] reset board game',
-}
 type gameActions =
   | { type: typesGame.CHANGE_ACTIVE_PLAYERS; payload: number }
   | { type: typesGame.SET_PLAYERS; payload: IGame[] }
