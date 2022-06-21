@@ -6,6 +6,7 @@ interface IWinner {
   player: number;
   board: number[][];
 }
+
 interface IPropsCount extends IWinner {
   x: number;
   y: number;

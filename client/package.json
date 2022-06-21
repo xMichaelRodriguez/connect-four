@@ -6,7 +6,7 @@
     "dev": "cross-env NODE_ENV=development vite",
     "build": "cross-env NODE_ENV=production tsc && vite build",
     "preview": "cross-env NODE_ENV=development vite preview",
-    "test": "cross-env NODE_ENV=development  jest src --verbose",
+    "test": "cross-env NODE_ENV=development vitest",
     "lint-fix": "eslint  . --ext ts,tsx --fix"
   },
   "dependencies": {
@@ -58,12 +58,14 @@
     "ts-jest": "^28.0.5",
     "ts-node": "^10.8.1",
     "typescript": "4.6.3",
-    "vite": "2.9.9"
+    "vite": "^2.9.9",
+    "vitest": "^0.15.2"
   },
   "jest": {
+    "injectGlobals": true,
     "testEnvironment": "jsdom",
     "setupFilesAfterEnv": [
-      "<rootDir>/setupTest.ts"
+      "<rootDir>/src/setupTests.ts"
     ],
     "transform": {
       "^.+\\.tsx?$": "ts-jest"

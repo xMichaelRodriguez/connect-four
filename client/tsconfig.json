@@ -5,20 +5,19 @@
     "esModuleInterop": false,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": false,
-    "isolatedModules": true,
     "jsx": "react-jsx",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "module": "ESNext",
+    "module": "ES2020",
     "moduleResolution": "Node",
     "noEmit": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "ESNext",
+    "target": "ES2020",
     "typeRoots": ["node_modules/@types"],
-    "types": ["jest", "node"],
+    "types": ["jest", "node", "vite/client"],
     "useDefineForClassFields": true
   },
-  "include": ["src/*.*", "src/__tests__/*.*"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src/*.*", "/src/__tests__/*.*", "setupTests.ts"],
+  // "exclude": ["/src/__tests__/*.*"], "src/__tests__/features/auth/pages/AuthPage.test.tsx"
 }
