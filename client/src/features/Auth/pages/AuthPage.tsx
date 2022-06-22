@@ -1,5 +1,5 @@
 import React from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { SubmitHandler } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { useAuth } from '../../../hook/useAuth';
@@ -20,7 +20,6 @@ interface IResponse {
 export function AuthPage() {
   const history = useHistory();
   const { setLogin } = useAuth();
-  const { register, handleSubmit, formState } = useForm<IFormInput>();
 
   const onSubmit: SubmitHandler<IFormInput> = async ({ username }) => {
     socket.emit('createUser', { username: username.trim() }, (data: IResponse) => {
@@ -39,12 +38,5 @@ export function AuthPage() {
     });
   };
 
-  return (
-    <AuthView
-      onSubmit={onSubmit}
-      handleSubmit={handleSubmit}
-      formState={formState}
-      register={register}
-    />
-  );
+  return <AuthView onSubmit={onSubmit} />;
 }

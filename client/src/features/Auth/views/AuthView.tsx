@@ -1,23 +1,19 @@
 import React from 'react';
-import {
-  Button, Center, FormControl, FormHelperText, Heading, Input,
-} from '@chakra-ui/react';
-import {
-  FormState, SubmitHandler, UseFormHandleSubmit, UseFormRegister,
-} from 'react-hook-form';
+import { Button, Center, FormControl, FormHelperText, Heading, Input } from '@chakra-ui/react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { IFormInput } from '../pages/AuthPage';
 import { ContainerComponent } from '../../../components/ContainerComponent';
 import { FaceUpAnimateComponent } from '../../../components/FaceUpAnimateComponent';
 
 interface IProps {
-  handleSubmit: UseFormHandleSubmit<IFormInput>;
   onSubmit: SubmitHandler<IFormInput>;
-  formState: FormState<IFormInput>;
-  register: UseFormRegister<IFormInput>;
 }
-export function AuthView({
-  formState: { errors }, handleSubmit, onSubmit, register,
-}: IProps) {
+export function AuthView({ onSubmit }: IProps) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IFormInput>();
   return (
     <ContainerComponent>
       <FaceUpAnimateComponent>
