@@ -1,5 +1,5 @@
-import { useDisclosure } from '@chakra-ui/react';
 import React, { ReactNode, useMemo } from 'react';
+import { useDisclosure } from '@chakra-ui/react';
 import { ModalContext } from './ModalContext';
 
 interface props {
